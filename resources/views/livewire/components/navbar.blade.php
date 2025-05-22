@@ -1,10 +1,10 @@
 <nav x-data x-cloak class="relative w-full px-8 text-gray-700 bg-white body-font"
     data-tails-scripts="//unpkg.com/alpinejs" {!! $attributes ?? '' !!}>
     <div class="container flex flex-col flex-wrap items-center justify-between py-5 mx-auto md:flex-row max-w-7xl">
-        <a href="#_"
+        <a href="/"
             class="relative z-10 flex items-center w-auto text-3xl leading-none text-black select-none space-x-2">
             <flux:icon.paw-print class="size-8" />
-            <p>Lion BD</p>
+            <p>LionBD</p>
         </a>
 
         <nav

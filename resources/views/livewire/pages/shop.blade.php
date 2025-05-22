@@ -61,8 +61,8 @@
 
 
                 @for ($i = 0; $i < 12; $i++) <div class="w-full md:w-1/2 xl:w-1/3 p-4 flex flex-col items-center">
-                    <a href="#">
-                        <img class="transform transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                    <a href="product">
+                        <img class="transform transition-transform duration-300 rounded-xl hover:scale-105 hover:shadow-lg"
                             src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                         <div class="pt-3 flex items-center justify-between">
                             <p class="font-medium text-gray-800">Product Name {{ $i + 1 }}</p>
