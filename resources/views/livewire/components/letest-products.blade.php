@@ -21,194 +21,206 @@
             </div>
         </nav>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
-            <a href="#">
-                <img class="hover:grow hover:shadow-lg"
-                    src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                <div class="pt-3 flex items-center justify-between">
-                    <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
-                </div>
-                <div class="flex flex-row items-center pt-1">
-                    <flux:icon.currency-bangladeshi class="size-6" />
-                    <p class="text-gray-900">900</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
-            <a href="#">
-                <img class="hover:grow hover:shadow-lg"
-                    src="https://images.unsplash.com/photo-1508423134147-addf71308178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                <div class="pt-3 flex items-center justify-between">
-                    <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
-                </div>
-                <div class="flex flex-row items-center pt-1">
-                    <flux:icon.currency-bangladeshi class="size-6" />
-                    <p class="text-gray-900">900</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
-            <a href="#">
-                <img class="hover:grow hover:shadow-lg"
-                    src="https://images.unsplash.com/photo-1449247709967-d4461a6a6103?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                <div class="pt-3 flex items-center justify-between">
-                    <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
-                </div>
-                <div class="flex flex-row items-center pt-1">
-                    <flux:icon.currency-bangladeshi class="size-6" />
-                    <p class="text-gray-900">900</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/reserve/LJIZlzHgQ7WPSh5KVTCB_Typewriter.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
+            <a href="#">
+                <img class="hover:grow hover:shadow-lg"
+                    src="https://images.unsplash.com/photo-1508423134147-addf71308178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
+                <div class="pt-3 flex items-center justify-between">
+                    <p class="">Product Name</p>
+                </div>
+                <div class="flex flex-row items-center pt-1">
+                    <flux:icon.currency-bangladeshi class="size-6" />
+                    <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
+                </div>
+            </a>
+        </div>
+
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
+            <a href="#">
+                <img class="hover:grow hover:shadow-lg"
+                    src="https://images.unsplash.com/photo-1449247709967-d4461a6a6103?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
+                <div class="pt-3 flex items-center justify-between">
+                    <p class="">Product Name</p>
+                </div>
+                <div class="flex flex-row items-center pt-1">
+                    <flux:icon.currency-bangladeshi class="size-6" />
+                    <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
+                </div>
+            </a>
+        </div>
+
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
+            <a href="#">
+                <img class="hover:grow hover:shadow-lg"
+                    src="https://images.unsplash.com/reserve/LJIZlzHgQ7WPSh5KVTCB_Typewriter.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
+                <div class="pt-3 flex items-center justify-between">
+                    <p class="">Product Name</p>
+                </div>
+                <div class="flex flex-row items-center pt-1">
+                    <flux:icon.currency-bangladeshi class="size-6" />
+                    <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
+                </div>
+            </a>
+        </div>
+
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/photo-1467949576168-6ce8e2df4e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/photo-1550837368-6594235de85c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/photo-1551431009-a802eeec77b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/photo-1508423134147-addf71308178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/photo-1449247709967-d4461a6a6103?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>
 
-        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
             <a href="#">
                 <img class="hover:grow hover:shadow-lg"
                     src="https://images.unsplash.com/reserve/LJIZlzHgQ7WPSh5KVTCB_Typewriter.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                 <div class="pt-3 flex items-center justify-between">
                     <p class="">Product Name</p>
-                    <flux:icon.shopping-cart class="text-gray-500 hover:text-black" />
-
                 </div>
                 <div class="flex flex-row items-center pt-1">
                     <flux:icon.currency-bangladeshi class="size-6" />
                     <p class="text-gray-900">900</p>
+                    <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
+                        Add to Cart
+                    </flux:button>
                 </div>
             </a>
         </div>

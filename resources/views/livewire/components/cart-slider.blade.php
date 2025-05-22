@@ -43,12 +43,12 @@
 
                                             <div class="overflow-scroll pt-4 flex-1">
 
-                                              
-                                            <div class="w-full py-2 border-y border-dashed border-neutral-300">
+
+                                                <div class="w-full py-2 border-y border-dashed border-neutral-300">
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -56,18 +56,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -75,7 +77,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -83,46 +85,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
-                                                        </div>
-                                                
-                                                    </div>
-                                                </div>
 
-
-                                                <div class="w-full py-2 border-y border-dashed border-neutral-300">
-                                                    <div class="flex flex-row gap-2">
-                                                        <img class="aspect-square" width="80"
-                                                            src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
-                                                        <div>
-                                                            <div class="flex justify-between">
-                                                                <p>Proudct Name</p>
-                                                                <flux:icon.x-mark class="size-4 hover:cursor-pointer" />
-                                                            </div>
-                                                            <div class="flex items-center w-full justify-between pt-2">
-                                                                <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
-                                                                    <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
-                                                                </div>
-                                                                <div class="flex w-full justify-end">
-                                                                    <flux:icon.currency-bangladeshi class="size-6" />
-                                                                    <p class="text-gray-900">900</p>
-                                                                </div>
-                                                            </div>
-                                                
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -131,7 +107,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -139,18 +115,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -159,7 +137,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -167,18 +145,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -187,7 +167,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -195,18 +175,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -215,7 +197,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -223,18 +205,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -243,7 +227,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -251,18 +235,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -271,7 +257,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -279,18 +265,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -299,7 +287,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -307,18 +295,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -327,7 +317,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -335,18 +325,20 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
                                                     </div>
                                                 </div>
 
@@ -355,7 +347,7 @@
                                                     <div class="flex flex-row gap-2">
                                                         <img class="aspect-square" width="80"
                                                             src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                                                
+
                                                         <div>
                                                             <div class="flex justify-between">
                                                                 <p>Proudct Name</p>
@@ -363,18 +355,50 @@
                                                             </div>
                                                             <div class="flex items-center w-full justify-between pt-2">
                                                                 <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                     <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle class="hover:cursor-pointer" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
                                                                 </div>
                                                                 <div class="flex w-full justify-end">
                                                                     <flux:icon.currency-bangladeshi class="size-6" />
                                                                     <p class="text-gray-900">900</p>
                                                                 </div>
                                                             </div>
-                                                
+
                                                         </div>
-                                                
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="w-full py-2 border-y border-dashed border-neutral-300">
+                                                    <div class="flex flex-row gap-2">
+                                                        <img class="aspect-square" width="80"
+                                                            src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
+
+                                                        <div>
+                                                            <div class="flex justify-between">
+                                                                <p>Proudct Name</p>
+                                                                <flux:icon.x-mark class="size-4 hover:cursor-pointer" />
+                                                            </div>
+                                                            <div class="flex items-center w-full justify-between pt-2">
+                                                                <div class="flex items-center gap-1">
+                                                                    <flux:icon.minus-circle
+                                                                        class="hover:cursor-pointer" />
+                                                                    <flux:input size="sm" />
+                                                                    <flux:icon.plus-circle
+                                                                        class="hover:cursor-pointer" />
+                                                                </div>
+                                                                <div class="flex w-full justify-end">
+                                                                    <flux:icon.currency-bangladeshi class="size-6" />
+                                                                    <p class="text-gray-900">900</p>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
                                                     </div>
                                                 </div>
 
@@ -396,8 +420,7 @@
                                                 </div>
 
                                                 <div class="pt-3">
-                                                    <flux:button variant="primary"
-                                                        class="w-full bg-indigo-700 hover:cursor-pointer hover:bg-indigo-800">
+                                                    <flux:button variant="primary" class="w-full hover:cursor-pointer">
                                                         Order</flux:button>
                                                 </div>
 
