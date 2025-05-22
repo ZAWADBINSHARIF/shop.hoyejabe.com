@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "php":"php artisan",
+        "php": "php artisan",
         "start": "php artisan serve --port=4000",
         "zero": "php artisan serve --host=0.0.0.0 --port=4000"
     },
