@@ -7,9 +7,8 @@ use App\Livewire\Pages\Home;
 use App\Livewire\Pages\Shop;
 use App\Livewire\Pages\SingleProduct;
 
-Route::get('/', Home::class);
-Route::get('/shop', Shop::class);
-Route::get('/about', About::class);
-Route::get('/contact-us', ContactUs::class);
-Route::get('/product', SingleProduct::class);
-
+Route::get('/', Home::class)->name("home");
+Route::get('/shop', Shop::class)->name("shop");
+Route::get('/about', About::class)->name("about");
+Route::get('/contact-us', ContactUs::class)->name("contact us");
+Route::get('/product', SingleProduct::class)->name("product");

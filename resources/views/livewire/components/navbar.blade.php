@@ -1,4 +1,4 @@
-<nav x-data x-cloak class="relative w-full px-8 text-gray-700 bg-white body-font"
+<nav x-data x-cloak class="relative w-full px-8 text-gray-700 bg-accent-foreground body-font"
     data-tails-scripts="//unpkg.com/alpinejs" {!! $attributes ?? '' !!}>
     <div class="container flex flex-col flex-wrap items-center justify-between py-5 mx-auto md:flex-row max-w-7xl">
         <a href="/"
@@ -9,35 +9,51 @@
 
         <nav
             class="top-0 left-0 z-0 flex items-center justify-center w-full h-full py-5 -ml-0 space-x-5 text-base md:-ml-5 md:py-0 md:absolute">
-            <a href="/"
-                class="relative font-medium leading-6 text-gray-600 transition duration-150 ease-out hover:text-gray-900"
-                x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
+            <a href="/" x-data="{
+                            active: {{ Route::is('home') ? 'true' : 'false' }},
+                            hover: false
+                        }" class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
+                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
+                @mouseleave="hover = false">
+
                 <span class="block">Home</span>
                 <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover" class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
-                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
-                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
-                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
-                </span>
-            </a>
-            <a href="shop"
-                class="relative font-medium leading-6 text-gray-600 transition duration-150 ease-out hover:text-gray-900"
-                x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
-                <span class="block">Shop</span>
-                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover" class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
+                    <span x-show="hover || active"
+                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
                         x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
                         x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
                         x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
                 </span>
             </a>
 
-            <a href="about"
-                class="relative font-medium leading-6 text-gray-600 transition duration-150 ease-out hover:text-gray-900"
-                x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
+            <a href="shop" x-data="{
+                            active: {{ Route::is('shop') ? 'true' : 'false' }},
+                            hover: false
+                        }" class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
+                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
+                @mouseleave="hover = false">
+
+                <span class="block">Shop</span>
+                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
+                    <span x-show="hover || active"
+                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
+                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
+                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
+                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
+                </span>
+            </a>
+
+            <a href="about" x-data="{
+                            active: {{ Route::is('about') ? 'true' : 'false' }},
+                            hover: false
+                        }" class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
+                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
+                @mouseleave="hover = false">
+
                 <span class="block">About</span>
                 <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover" class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
+                    <span x-show="hover || active"
+                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
                         x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
                         x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
                         x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
