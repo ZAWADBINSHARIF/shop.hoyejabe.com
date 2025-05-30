@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -22,6 +23,39 @@ class Product extends Model
     protected $casts = [
         'images' => 'array',
     ];
+
+
+    protected static function booted()
+    {
+        static::updating(function (Product $model) {
+            $originalPorductImages = $model->getOriginal('images') ?? [];
+            $newServiceImages = $model->images ?? [];
+
+            // Ensure both are arrays
+            if (!is_array($originalPorductImages)) {
+                $originalPorductImages = json_decode($originalPorductImages, true) ?? [];
+            }
+            if (!is_array($newServiceImages)) {
+                $newServiceImages = json_decode($newServiceImages, true) ?? [];
+            }
+
+            $deleteImages = array_diff($originalPorductImages, $newServiceImages);
+
+            foreach ($deleteImages as $image) {
+                Storage::disk('public')->delete($image);
+            }
+        });
+
+        static::deleting(function (Product $model) {
+            $deleteImages = $model->getOriginal('images');
+
+            foreach ($deleteImages as $image) {
+                Storage::disk('public')->delete($image);
+            }
+        });
+    }
+
+
 
     public function category()
     {

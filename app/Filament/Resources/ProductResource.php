@@ -1,0 +1,211 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use Illuminate\Support\Str;
+use App\Enums\StoragePath;
+use App\Enums\TextLength;
+use App\Filament\Resources\ProductResource\Pages;
+use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Forms\Components\BasicEditor;
+use App\Models\Product;
+use App\Models\size;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Forms\Components\{
+    ColorPicker,
+    TextInput,
+    Toggle,
+    Select,
+    FileUpload,
+    Repeater,
+    Section
+};
+use Filament\Forms\Set;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Filament\Tables\Columns\{
+    TextColumn,
+    BooleanColumn,
+    BadgeColumn,
+    ImageColumn,
+    SelectColumn,
+    ToggleColumn
+};
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class ProductResource extends Resource
+{
+    protected static ?string $model = Product::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Section::make()->schema([
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(TextLength::LONG->value)
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, Set $set, string|null $state) {
+
+                            if ($operation) {
+                                $set('slug', Str::slug($state, separator: "-"));
+                            }
+                        }),
+
+                    TextInput::make('slug')
+                        ->required()
+                        ->unique(Product::class, 'slug', ignoreRecord: true)
+                        ->readOnly()
+                        ->maxLength(TextLength::LONG->value),
+
+                    Select::make('product_category')
+                        ->label('Category')
+                        ->required()
+                        ->relationship('category', 'name')
+                        ->native(false),
+
+                    Section::make()->schema([
+                        Toggle::make('published')
+                            ->label('Published'),
+
+                        Toggle::make('out_of_stock')
+                            ->label('Out of Stock'),
+                    ])->columns(2)->columnSpan(1),
+
+                    Section::make()
+                        ->schema([
+                            BasicEditor::make('highlighted_description')
+                                ->required()
+                                ->disableToolbarButtons([
+                                    'blockquote',
+                                    'strike',
+                                    'h1',
+                                    'h2',
+                                    'h3',
+                                    'link'
+                                ]),
+
+                            BasicEditor::make('details_description')
+                                ->label('Detailed Description')
+                                ->nullable(),
+                        ])->columns(2),
+
+                ])->columns(2),
+
+                Section::make()
+                    ->schema([
+                        TextInput::make('base_price')
+                            ->numeric()
+                            ->required()
+                            ->prefix('৳'),
+
+                        TextInput::make('extra_shipping_cost')
+                            ->numeric()
+                            ->default(0)
+                            ->prefix('৳'),
+                    ])->columns(2),
+
+                Section::make("Add Sizes and colors")
+                    ->schema([
+                        Repeater::make('sizes')
+                            ->relationship()
+                            ->schema([
+                                Select::make('size_id')
+                                    ->relationship('size', 'value')
+                                    ->required()
+                                    ->native(false)
+                                    ->createOptionForm([
+                                        TextInput::make('value')
+                                            ->required()
+                                            ->maxLength(TextLength::MEDIUM->value)
+                                    ]),
+
+                                TextInput::make('extra_price')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->prefix('৳'),
+                            ])
+                            ->reorderable(false)
+                            ->collapsible(),
+
+                        Repeater::make('colors')
+                            ->relationship()
+                            ->schema([
+                                ColorPicker::make('color_code')
+                                    ->required(),
+
+                                TextInput::make('extra_price')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->prefix('৳'),
+                            ])
+                            ->reorderable(false)
+                            ->collapsible()
+                    ])->columns(2)->columnSpan(1),
+
+                FileUpload::make('images')
+                    ->label('Product Images')
+                    ->multiple()
+                    ->reorderable()
+                    ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
+                    ->rules(['dimensions:ratio=1/1'])
+                    ->helperText('Upload a aspect ratio 1:1 image (PNG/JPG/jpeg).')
+                    ->maxFiles(10)
+                    ->directory(StoragePath::PRODUCT_IMAGES->value)
+                    ->required()
+                    ->disk('public'),
+
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                ImageColumn::make('images'),
+                TextColumn::make('name')->searchable()->sortable(),
+                TextColumn::make('category.name')->label('Category')->sortable(),
+                TextColumn::make('base_price')->money('bdt', true)->sortable(),
+                ToggleColumn::make('published'),
+                ToggleColumn::make('out_of_stock'),
+                TextColumn::make('created_at')
+                    ->label('Created')
+                    ->timezone("Asia/Dhaka")
+                    ->date('d-M-y, h:i A'),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListProducts::route('/'),
+            'create' => Pages\CreateProduct::route('/create'),
+            'edit' => Pages\EditProduct::route('/{record}/edit'),
+        ];
+    }
+}
