@@ -51,8 +51,8 @@ class CarouselImageResource extends Resource
                 TextColumn::make('title'),
                 TextColumn::make('product_url')
                     ->label('Product URL')
-                    ->url(fn($record) => $record->product_url) // makes it clickable
-                    ->openUrlInNewTab(), // optional: opens in a new tab
+                    ->url(fn($record) => $record->product_url)
+                    ->openUrlInNewTab(),
             ])
             ->filters([
                 //
