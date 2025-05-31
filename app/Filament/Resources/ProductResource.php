@@ -42,6 +42,11 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Product::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form

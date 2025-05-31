@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -18,6 +19,10 @@ class Order extends Model
         'extra_shipping_cost',
         'total_price',
         'order_status'
+    ];
+
+    protected $casts = [
+        'order_status' => OrderStatus::class,
     ];
 
     public function shipping()
