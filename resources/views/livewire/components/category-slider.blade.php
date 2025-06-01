@@ -39,30 +39,13 @@
                                                         <li><a href="#"
                                                                 class="text-gray-600 hover:text-black hover:underline">All</a>
                                                         </li>
+
+                                                        @foreach ($categories as $item)
                                                         <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Electronics</a>
+                                                                class="text-gray-600 hover:text-black hover:underline">{{$item->name}}</a>
                                                         </li>
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Clothing</a>
-                                                        </li>
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Home
-                                                                & Living</a></li>
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Books</a>
-                                                        </li>
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Toys</a>
-                                                        </li>
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Beauty</a>
-                                                        </li>
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Sports</a>
-                                                        </li>
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">Automotive</a>
-                                                        </li>
+                                                        @endforeach
+
                                                     </ul>
                                                 </div>
                                             </aside>

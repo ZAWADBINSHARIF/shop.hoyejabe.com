@@ -1,84 +1,70 @@
-<div class="carousel relative container mx-auto" style="max-width:1600px;">
-    <div class="carousel-inner relative overflow-hidden w-full">
-        <!--Slide 1-->
-        <input class="carousel-open" type="radio" id="carousel-1" name="carousel" aria-hidden="true" hidden=""
-            checked="checked">
-        <div class="carousel-item absolute opacity-0" style="height:50vh;">
-            <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
-                style="background-image: url('https://images.unsplash.com/photo-1422190441165-ec2956dc9ecc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1600&q=80');">
+<div x-data="carouselComponent()" x-init="startAutoScroll" class="relative container mx-auto" style="max-width:1600px;">
+    <div class="relative overflow-hidden w-full" style="height: 50vh;">
+        <template x-for="(item, index) in carousel" :key="index">
+            <div x-show="activeSlide === index" @click="()=> {
+                if(item.product_url){
+                    window.location.href = item.product_url
+                }
+            }" 
+            :class="item.product_url && 'hover:cursor-pointer'"
+            x-transition:enter="transform transition duration-1000 ease-in-out"
+                x-transition:enter-start="translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+                x-transition:leave="transform transition duration-1000 ease-in-out"
+                x-transition:leave-start="translate-x-0 opacity-100"
+                x-transition:leave-end="-translate-x-full opacity-0" class="absolute inset-0 bg-cover bg-center"
+                :style="`background-image: url(storage/${item.image});`">
 
-                <div class="container mx-auto">
-                    <div class="flex flex-col w-full lg:w-1/2 md:ml-16 items-center md:items-start px-6 tracking-wide">
-                        <p class="text-black text-2xl my-4">Stripy Zig Zag Jigsaw Pillow and Duvet Set</p>
-                        <a class="text-xl inline-block no-underline border-b border-gray-600 leading-relaxed hover:text-black hover:border-black"
-                            href="#">view product</a>
+                <div class="h-full w-full flex items-center">
+                    <div class="container mx-auto px-12 md:px-6">
+                        <div class="w-full lg:w-1/2">
+
+                            <p class="text-2xl my-4 p-2 px-4 rounded-xl w-fit bg-white/60" x-show="item.title"
+                                x-text="item.title"></p>
+                            <a x-show="item.product_url" :href="item.product_url"
+                                class="text-xl underline hover:cursor-pointer p-2 px-4 rounded-xl w-fit bg-white/60">
+                                View Product
+                            </a>
+
+                        </div>
                     </div>
                 </div>
-
             </div>
+        </template>
+
+        <!-- Buttons -->
+        <button @click="prevSlide"
+            class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white">‹</button>
+        <button @click="nextSlide"
+            class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white">›</button>
+
+        <!-- Indicators -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-3">
+            <template x-for="(slide, index) in slides" :key="index">
+                <button @click="activeSlide = index" :class="activeSlide === index ? 'bg-white' : 'bg-gray-400'"
+                    class="w-3 h-3 rounded-full hover:cursor-pointer"></button>
+            </template>
         </div>
-        <label for="carousel-3"
-            class="prev control-1 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
-        <label for="carousel-2"
-            class="next control-1 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
-
-        <!--Slide 2-->
-        <input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true" hidden="">
-        <div class="carousel-item absolute opacity-0 bg-cover bg-right" style="height:50vh;">
-            <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
-                style="background-image: url('https://images.unsplash.com/photo-1533090161767-e6ffed986c88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjM0MTM2fQ&auto=format&fit=crop&w=1600&q=80');">
-
-                <div class="container mx-auto">
-                    <div class="flex flex-col w-full lg:w-1/2 md:ml-16 items-center md:items-start px-6 tracking-wide">
-                        <p class="text-black text-2xl my-4">Real Bamboo Wall Clock</p>
-                        <a class="text-xl inline-block no-underline border-b border-gray-600 leading-relaxed hover:text-black hover:border-black"
-                            href="#">view product</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <label for="carousel-1"
-            class="prev control-2 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900  leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
-        <label for="carousel-3"
-            class="next control-2 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900  leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
-
-        <!--Slide 3-->
-        <input class="carousel-open" type="radio" id="carousel-3" name="carousel" aria-hidden="true" hidden="">
-        <div class="carousel-item absolute opacity-0" style="height:50vh;">
-            <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-bottom"
-                style="background-image: url('https://images.unsplash.com/photo-1519327232521-1ea2c736d34d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1600&q=80');">
-
-                <div class="container mx-auto">
-                    <div class="flex flex-col w-full lg:w-1/2 md:ml-16 items-center md:items-start px-6 tracking-wide">
-                        <p class="text-black text-2xl my-4">Brown and blue hardbound book</p>
-                        <a class="text-xl inline-block no-underline border-b border-gray-600 leading-relaxed hover:text-black hover:border-black"
-                            href="#">view product</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <label for="carousel-2"
-            class="prev control-3 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900  leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
-        <label for="carousel-1"
-            class="next control-3 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900  leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
-
-        <!-- Add additional indicators for each slide-->
-        <ol class="carousel-indicators">
-            <li class="inline-block mr-3">
-                <label for="carousel-1"
-                    class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
-            </li>
-            <li class="inline-block mr-3">
-                <label for="carousel-2"
-                    class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
-            </li>
-            <li class="inline-block mr-3">
-                <label for="carousel-3"
-                    class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
-            </li>
-        </ol>
-
     </div>
 </div>
+
+<script>
+    function carouselComponent() {
+    return {
+        activeSlide: 0,
+        slides: {{ count($carousel) }},
+        carousel: @js($carousel),
+        interval: null,
+        startAutoScroll() {
+            this.interval = setInterval(() => {
+                this.nextSlide()
+            }, 5000)
+        },
+        nextSlide() {
+            this.activeSlide = (this.activeSlide + 1) % this.slides
+        },
+        prevSlide() {
+            this.activeSlide = (this.activeSlide - 1 + this.slides) % this.slides
+        }
+    }
+}
+</script>

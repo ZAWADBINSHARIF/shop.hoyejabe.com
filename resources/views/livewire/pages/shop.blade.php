@@ -7,14 +7,11 @@
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Categories</h2>
                 <ul class="space-y-2">
                     <li><a href="#" class="text-gray-600 hover:text-black hover:underline">All</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Electronics</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Clothing</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Home & Living</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Books</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Toys</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Beauty</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Sports</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">Automotive</a></li>
+
+                    @foreach ($categories as $item)
+                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">{{$item->name}}</a></li>
+                    @endforeach
+
                 </ul>
             </div>
         </aside>
@@ -55,29 +52,25 @@
 
             <div class="flex flex-wrap overflow-scroll">
 
-                @php
-                $product = 3
-                @endphp
 
-
-                @for ($i = 0; $i < 12; $i++) <div class="w-full md:w-1/2 xl:w-1/3 p-4 flex flex-col items-center">
+                @foreach ($products as $item) <div class="w-full md:w-1/2 xl:w-1/3 p-4 flex flex-col items-center">
                     <a href="product">
                         <img class="transform transition-transform duration-300 rounded-xl hover:scale-105 hover:shadow-lg"
-                            src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
+                            src="storage/{{$item->images[0]}}">
                         <div class="pt-3 flex items-center justify-between">
-                            <p class="font-medium text-gray-800">Product Name {{ $i + 1 }}</p>
+                            <p class="font-medium text-gray-800">{{$item->name}}</p>
                         </div>
                         <div class="flex flex-row items-center pt-1">
                             <flux:icon.currency-bangladeshi class="size-6" />
-                            <p class="text-gray-900">900</p>
+                            <p class="text-gray-900">{{$item->base_price}}</p>
                             <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
                                 Add to Cart
                             </flux:button>
                         </div>
                     </a>
             </div>
-            @endfor
- 
+            @endforeach
+
 
         </div>
 
