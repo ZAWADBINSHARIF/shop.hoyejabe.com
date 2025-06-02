@@ -74,7 +74,7 @@
 
         </nav>
 
-        <div class="relative z-10 inline-flex items-center space-x-3 md:ml-5 lg:justify-end hover:cursor-pointer"
+        <div class="relative z-10 inline-flex items-center space-x-3 mt-3 md:mt-0 md:ml-5 lg:justify-end hover:cursor-pointer"
             @click="$store.cartSlider.slideOverOpen=true">
             <flux:icon.shopping-cart class="size-6" />
             <flux:badge variant="solid" color="indigo" size="sm" class="absolute -top-4 text-white h-5">88</flux:badge>

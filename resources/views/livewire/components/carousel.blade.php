@@ -34,9 +34,13 @@
 
         <!-- Buttons -->
         <button @click="prevSlide"
-            class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white">‹</button>
+            class="absolute left-4 md:left-7 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white hover:cursor-pointer">
+            <flux:icon.chevron-left />
+        </button>
         <button @click="nextSlide"
-            class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white">›</button>
+            class="absolute right-4 md:right-7 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white hover:cursor-pointer">
+            <flux:icon.chevron-right />
+        </button>
 
         <!-- Indicators -->
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-3">

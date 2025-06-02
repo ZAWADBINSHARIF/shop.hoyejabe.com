@@ -1,4 +1,4 @@
 <div>
     <livewire:components.carousel />
-    <livewire:components.letest-products />
+    <livewire:components.latest-products />
 </div>

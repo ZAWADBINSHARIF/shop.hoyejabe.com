@@ -10,12 +10,11 @@
 
             <!-- Thumbnails -->
             <div class="grid grid-cols-4 gap-3">
-                @for ($i = 1; $i
-                <= 4; $i++) <img
-                    src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80"
-                    alt="Thumbnail {{ $i }}"
-                    class="w-full aspect-square object-cover rounded-xl hover:shadow-lg hover:scale-105 transition cursor-pointer"
-                    onclick="document.getElementById('mainImage').src = this.src" />
+                @for ($i = 1; $i <= 4; $i++)
+                    <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80"
+                        alt="Thumbnail {{ $i }}"
+                        class="w-full aspect-square object-cover rounded-xl hover:shadow-lg hover:scale-105 transition cursor-pointer"
+                        onclick="document.getElementById('mainImage').src = this.src" />
                 @endfor
             </div>
         </div>
@@ -54,20 +53,25 @@
             <div>
                 <h4 class="text-sm font-medium text-gray-700 mb-2">Select Size:</h4>
                 <div class="flex flex-wrap gap-3">
-                    @foreach(['SM', 'MD', 'LG', 'XL', 'XXL'] as $size)
-                    <button
-                        class="px-4 py-2 text-sm border rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        {{ $size }}
-                    </button>
+                    @foreach (['SM', 'MD', 'LG', 'XL', 'XXL'] as $size)
+                        <button
+                            class="px-4 py-2 text-sm border rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            {{ $size }}
+                        </button>
                     @endforeach
                 </div>
             </div>
 
             <!-- Add to Cart -->
-            <div class="pt-2">
-                <flux:button variant="primary" icon="shopping-cart" class="w-full md:w-auto">
+            <div class="pt-2 space-x-1.5">
+                <flux:button variant="primary" icon="package" class="w-full md:w-auto">
+                    Order Now
+                </flux:button>
+
+                <flux:button icon="shopping-cart" class="w-full md:w-auto">
                     Add to Cart
                 </flux:button>
+               
             </div>
 
             <!-- Long Description -->
