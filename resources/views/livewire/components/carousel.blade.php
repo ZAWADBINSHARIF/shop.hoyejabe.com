@@ -1,13 +1,14 @@
-<div x-data="carouselComponent()" x-init="startAutoScroll" class="relative container mx-auto" style="max-width:1600px;">
+<div x-data="carouselComponent()" class="relative container mx-auto" style="max-width:1600px;">
     <div class="relative overflow-hidden w-full" style="height: 50vh;">
         <template x-for="(item, index) in carousel" :key="index">
-            <div x-show="activeSlide === index" @click="()=> {
+            <div x-show="activeSlide === index"
+                @click="()=> {
                 if(item.product_url){
                     window.location.href = item.product_url
                 }
-            }" 
-            :class="item.product_url && 'hover:cursor-pointer'"
-            x-transition:enter="transform transition duration-1000 ease-in-out"
+            }"
+                :class="item.product_url && 'hover:cursor-pointer'"
+                x-transition:enter="transform transition duration-1000 ease-in-out"
                 x-transition:enter-start="translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
                 x-transition:leave="transform transition duration-1000 ease-in-out"
                 x-transition:leave-start="translate-x-0 opacity-100"
@@ -49,22 +50,44 @@
 
 <script>
     function carouselComponent() {
-    return {
-        activeSlide: 0,
-        slides: {{ count($carousel) }},
-        carousel: @js($carousel),
-        interval: null,
-        startAutoScroll() {
-            this.interval = setInterval(() => {
-                this.nextSlide()
-            }, 5000)
-        },
-        nextSlide() {
-            this.activeSlide = (this.activeSlide + 1) % this.slides
-        },
-        prevSlide() {
-            this.activeSlide = (this.activeSlide - 1 + this.slides) % this.slides
+        return {
+            activeSlide: 0,
+            slides: {{ count($carousel) }},
+            carousel: @js($carousel),
+            interval: null,
+
+            init() {
+                this.startAutoScroll();
+
+                // Cleanup when Alpine component is destroyed
+                this.$el.addEventListener('alpine:destroy', () => {
+                    this.stopAutoScroll();
+                });
+            },
+
+            startAutoScroll() {
+                this.stopAutoScroll(); // 🔁 Clear previous interval
+                this.interval = setInterval(() => {
+                    this.nextSlide();
+                }, 5000); // 5 seconds
+            },
+
+            stopAutoScroll() {
+                if (this.interval) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+            },
+
+            nextSlide() {
+                this.activeSlide = (this.activeSlide + 1) % this.slides;
+                this.startAutoScroll(); // ⏱ Restart timer
+            },
+
+            prevSlide() {
+                this.activeSlide = (this.activeSlide - 1 + this.slides) % this.slides;
+                this.startAutoScroll(); // ⏱ Restart timer
+            }
         }
     }
-}
 </script>
