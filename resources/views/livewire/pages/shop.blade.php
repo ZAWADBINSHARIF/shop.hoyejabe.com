@@ -39,10 +39,10 @@
                             </flux:button>
                         </div>
 
-                        <flux:select wire:model="industry" placeholder="Filter...">
-                            <flux:select.option>Newest</flux:select.option>
-                            <flux:select.option>Price low to high</flux:select.option>
-                            <flux:select.option>Price high to low</flux:select.option>
+                        <flux:select wire:model.change="sortBy" placeholder="Filter...">
+                            <flux:select.option value="newest">Newest</flux:select.option>
+                            <flux:select.option value="price_low_high">Price low to high</flux:select.option>
+                            <flux:select.option value="price_high_low">Price high to low</flux:select.option>
                         </flux:select>
 
                     </div>
@@ -52,7 +52,6 @@
 
 
             <div class="flex flex-wrap overflow-scroll">
-
 
                 @foreach ($products as $item)
                     <div class="w-full md:w-1/2 xl:w-1/3 p-4 flex flex-col items-center">

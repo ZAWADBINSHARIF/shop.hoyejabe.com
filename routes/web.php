@@ -10,5 +10,5 @@ use App\Livewire\Pages\SingleProduct;
 Route::get('/', Home::class)->name("home");
 Route::get('/shop', Shop::class)->name("shop");
 Route::get('/about', About::class)->name("about");
-Route::get('/contact-us', ContactUs::class)->name("contact us");
+Route::get('/contact-us', ContactUs::class)->name("contactUs");
 Route::get('/product', SingleProduct::class)->name("product");
