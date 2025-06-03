@@ -13,13 +13,10 @@ class Shop extends Component
 
     use WithPagination;
 
-    public $categories;
+    public $categories, $searchInput, $perPageItem = 24;
 
     #[Url]
-    public $sortBy;
-
-    #[Url()]
-    public $category;
+    public $sortBy, $category, $search;
 
     protected $listeners = [
         'change-category' => 'setCategory',
@@ -29,10 +26,15 @@ class Shop extends Component
     public function mount()
     {
         $this->categories = ProductCategory::all();
+
+        if ($this->search)
+            $this->searchInput = $this->search;
     }
 
     public function updatedCategory()
     {
+        $this->search = null;
+        $this->searchInput = null;
         $this->setPage(1);
     }
 
@@ -42,14 +44,33 @@ class Shop extends Component
         $this->resetPage();
     }
 
+    public function applySearch()
+    {
+        if (!$this->searchInput) {
+            $this->searchInput = null;
+        }
+
+        $this->search = $this->searchInput;
+        $this->category = null;
+        $this->resetPage();
+    }
+
     public function render()
     {
-        $query = Product::query();
+        $query = Product::query()->where('published', true);
 
         if ($this->category) {
             $query->whereHas('category', function ($query) {
                 $query->where('slug', $this->category);
             });
+        }
+
+        if ($this->search) {
+            $query->whereAny([
+                'name',
+                'highlighted_description',
+                'details_description'
+            ], 'like', '%' . $this->search . '%');
         }
 
         if ($this->sortBy === 'price_low_high') {
@@ -60,7 +81,7 @@ class Shop extends Component
             $query->latest();
         }
 
-        $products = $query->paginate(2);
+        $products = $query->paginate($this->perPageItem);
 
         return view('livewire.pages.shop', [
             'products' => $products,

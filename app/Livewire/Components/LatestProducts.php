@@ -8,10 +8,17 @@ use Livewire\Component;
 class LatestProducts extends Component
 {
 
-    public $latestProducts;
+    public $latestProducts, $searchInput;
 
-    public function mount(){
-        $this->latestProducts = Product::latest()->take(12)->get();
+    public function applySearch()
+    {
+        if ($this->searchInput)
+            $this->redirect("/shop?search=" . $this->searchInput);
+    }
+
+    public function mount()
+    {
+    $this->latestProducts = Product::latest()->take(12)->get();
     }
 
     public function render()
