@@ -18,20 +18,39 @@ class Shop extends Component
     #[Url]
     public $sortBy;
 
+    #[Url()]
+    public $category;
+
+    protected $listeners = [
+        'change-category' => 'setCategory',
+    ];
+
 
     public function mount()
     {
         $this->categories = ProductCategory::all();
     }
 
-    public function updatedSortBy()
+    public function updatedCategory()
     {
+        $this->setPage(1);
+    }
+
+    public function setCategory($slug)
+    {
+        $this->category = $slug;
         $this->resetPage();
     }
 
     public function render()
     {
         $query = Product::query();
+
+        if ($this->category) {
+            $query->whereHas('category', function ($query) {
+                $query->where('slug', $this->category);
+            });
+        }
 
         if ($this->sortBy === 'price_low_high') {
             $query->orderBy('base_price', 'asc');
@@ -41,7 +60,7 @@ class Shop extends Component
             $query->latest();
         }
 
-        $products = $query->paginate(24);
+        $products = $query->paginate(2);
 
         return view('livewire.pages.shop', [
             'products' => $products,

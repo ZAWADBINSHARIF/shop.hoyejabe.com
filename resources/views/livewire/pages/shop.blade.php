@@ -6,18 +6,23 @@
             <div class="mb-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Categories</h2>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-600 hover:text-black hover:underline">All</a></li>
+                    <li><button wire:click="$set('category',null)"
+                            class="text-gray-600 hover:text-black hover:underline hover:cursor-pointer">All</button></li>
 
                     @foreach ($categories as $item)
-                        <li><a href="#"
-                                class="text-gray-600 hover:text-black hover:underline">{{ $item->name }}</a></li>
+                        <li>
+                            <button wire:click="$set('category', '{{ $item->slug }}')"
+                                class="text-gray-600 hover:text-black hover:underline hover:cursor-pointer">
+                                {{ $item->name }}
+                            </button>
+                        </li>
                     @endforeach
 
                 </ul>
             </div>
         </aside>
 
-        <livewire:components.category-slider />
+        <livewire:components.category-slider :categories='$categories'/>
 
         <!-- Main Content: Product Grid -->
         <div class="w-full md:w-3/4">

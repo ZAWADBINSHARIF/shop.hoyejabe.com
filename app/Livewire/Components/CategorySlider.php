@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Components;
 
-use App\Models\ProductCategory;
 use Livewire\Component;
 
 class CategorySlider extends Component
@@ -10,9 +9,9 @@ class CategorySlider extends Component
 
     public $categories;
 
-    public function mount()
+    public function selectCategory($slug = null)
     {
-        $this->categories  = ProductCategory::all();
+        $this->dispatch('change-category', $slug);
     }
 
     public function render()

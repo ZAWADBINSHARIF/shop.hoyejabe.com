@@ -21,7 +21,7 @@
                                     <div class="flex items-start justify-between pb-1">
                                         <h2 class="text-2xl font-semibold leading-6 text-gray-900"
                                             id="slide-over-title">Categories</h2>
-                                        <div class="flex items-center h-auto ml-3 items-center">
+                                        <div class="flex items-center h-auto ml-3">
                                             <flux:button variant="ghost" icon="x-mark" class="hover:cursor-pointer"
                                                 @click="$store.categorySlider.slideOverOpen=false">
                                                 Close</flux:button>
@@ -36,14 +36,17 @@
                                             <aside class="w-full px-4 overflow-y-scroll">
                                                 <div class="mb-6">
                                                     <ul class="space-y-2">
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">All</a>
+                                                        <li><button wire:click="selectCategory(null)"
+                                                                @click="$store.categorySlider.slideOverOpen = false"
+                                                                class="text-gray-600 hover:text-black hover:underline">All</button>
                                                         </li>
 
                                                         @foreach ($categories as $item)
-                                                        <li><a href="#"
-                                                                class="text-gray-600 hover:text-black hover:underline">{{$item->name}}</a>
-                                                        </li>
+                                                            <li><button
+                                                                    wire:click="selectCategory('{{ $item->slug }}')"
+                                                                    @click="$store.categorySlider.slideOverOpen = false"
+                                                                    class="text-gray-600 hover:text-black hover:underline">{{ $item->name }}</button>
+                                                            </li>
                                                         @endforeach
 
                                                     </ul>

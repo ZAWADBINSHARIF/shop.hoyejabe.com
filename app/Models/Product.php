@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
@@ -56,23 +59,22 @@ class Product extends Model
     }
 
 
-
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'product_category');
     }
 
-    public function colors()
+    public function colors(): HasMany
     {
         return $this->hasMany(ProductColor::class);
     }
 
-    public function sizes()
+    public function sizes(): HasMany
     {
         return $this->hasMany(ProductSize::class);
     }
 
-    public function orderedProducts()
+    public function orderedProducts(): HasMany
     {
         return $this->hasMany(OrderedProduct::class);
     }
