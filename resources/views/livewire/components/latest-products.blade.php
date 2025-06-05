@@ -1,3 +1,7 @@
+@php
+    $productCount = count($latestProducts);
+@endphp
+
 <section class="bg-white py-8">
 
     <div class="container mx-auto flex items-center flex-wrap pt-4 pb-12">
@@ -26,7 +30,7 @@
 
         @foreach ($latestProducts as $item)
             <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
-                <a href="product">
+                <a href="shop/{{ $item->slug }}">
                     <img class="hover:grow hover:shadow-lg rounded-xl" src="storage/{{ $item->images[0] }}">
                     <div class="pt-3 flex items-center justify-between">
                         <p class="">{{ $item->name }}</p>
@@ -42,7 +46,7 @@
             </div>
         @endforeach
 
-        @if (count($latestProducts) === 0)
+        @if ($productCount === 0)
             <div class="flex justify-center items-center flex-col flex-1 mt-18">
                 <flux:icon.package-open class="size-32 text-gray-600" />
                 <flux:text class="text-lg">No Data found</flux:text>
@@ -51,7 +55,7 @@
 
     </div>
 
-    @if (count($latestProducts) !== 0)
+    @if ($productCount !== 0)
         <div class="flex justify-center">
             <a href="/shop">
                 <flux:button variant="outline" class="mx-auto hover:cursor-pointer">Show more products</flux:button>

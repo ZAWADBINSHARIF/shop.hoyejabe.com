@@ -8,7 +8,7 @@ use Livewire\Component;
 class LatestProducts extends Component
 {
 
-    public $latestProducts, $searchInput;
+    public $latestProducts, $searchInput, $totalShownProducts = 12;
 
     public function applySearch()
     {
@@ -18,7 +18,7 @@ class LatestProducts extends Component
 
     public function mount()
     {
-    $this->latestProducts = Product::latest()->take(12)->get();
+    $this->latestProducts = Product::latest()->take($this->totalShownProducts)->get();
     }
 
     public function render()

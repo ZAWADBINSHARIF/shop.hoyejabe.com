@@ -9,6 +9,7 @@ use App\Livewire\Pages\SingleProduct;
 
 Route::get('/', Home::class)->name("home");
 Route::get('/shop', Shop::class)->name("shop");
+Route::get('/shop/{product_slug}', SingleProduct::class)->name("shop.product");
 Route::get('/about', About::class)->name("about");
-Route::get('/contact-us', ContactUs::class)->name("contactUs");
+Route::get('/contact-us', ContactUs::class)->name("contact-us");
 Route::get('/product', SingleProduct::class)->name("product");
