@@ -32,59 +32,7 @@
                 {!! str($product->highlighted_description)->sanitizeHtml() !!}
             </div>
 
-            <div x-data="{
-                product: @js($product),
-                productQuantity: 1,
-                selectedColor: null,
-                extraColorPrice: 0,
-                selectedSize: null,
-                extraSizePrice: 0,
-                productSizes: @js($product->sizes),
-                productColors: @js($product->colors),
-                showErrorMessage: {
-                    colorError: false,
-                    sizeError: false
-                },
-                selectedShippingMethod: null,
-                selectedShipingMethodCost: 0,
-                get extraProductShippingCost() {
-                    return parseFloat(this.product.extra_shipping_cost)
-                },
-                get totalProductPrice() {
-                    return (parseFloat(this.product.base_price) + this.extraColorPrice + this.extraSizePrice) * this.productQuantity;
-                },
-                get totalCost() {
-                    return (this.totalProductPrice + this.extraProductShippingCost + this.selectedShipingMethodCost).toFixed(2);
-                },
-                validateSelection() {
-            
-                    let isValid = true;
-            
-                    if (this.productColors.length > 0 && !this.selectedColor) {
-                        this.showErrorMessage.colorError = true;
-                        isValid = false;
-                    } else {
-                        this.showErrorMessage.colorError = false;
-                    }
-            
-                    if (this.productSizes.length > 0 && !this.selectedSize) {
-                        this.showErrorMessage.sizeError = true;
-                        isValid = false;
-                    } else {
-                        this.showErrorMessage.sizeError = false;
-                    }
-            
-                    return isValid;
-                },
-                increaseQuantity() {
-                    this.productQuantity++;
-                },
-                decreaseQuantity() {
-                    if (this.productQuantity > 1) {
-                        this.productQuantity--;
-                    }
-                },
-            }" x-cloak class="space-y-6">
+            <div x-data="productComponent(@js($product), @js($product->sizes), @js($product->colors))" x-cloak class="space-y-6">
                 <!-- Price -->
                 <div class="flex items-center gap-2 text-xl md:text-2xl font-semibold text-gray-900">
                     <flux:icon.currency-bangladeshi class="size-5 md:size-6" />
@@ -92,9 +40,9 @@
                 </div>
 
                 <!-- Color Options -->
-                <div>
+                <div x-show="productColors.length > 0">
                     <h4 class="text-sm font-medium text-gray-700 mb-2">Available Colors: <span
-                            class="text-sm font-light text-red-700" x-show="showErrorMessage.colorError">Choose a
+                            class="text-sm font-fold text-red-600" x-show="showErrorMessage.colorError">Choose a
                             color</span></h4>
                     <div class="flex flex-wrap gap-3">
                         <template x-for="(color, index) in productColors" :key="index">
@@ -124,9 +72,9 @@
                 </div>
 
                 <!-- Size Options -->
-                <div>
+                <div x-show="productSizes.length > 0">
                     <h4 class="text-sm font-medium text-gray-700 mb-2">Select Size: <span
-                            class="text-sm font-light text-red-700" x-show="showErrorMessage.sizeError">Choose a
+                            class="text-sm font-bold text-red-700" x-show="showErrorMessage.sizeError">Choose a
                             size</span></h4>
                     <div class="flex flex-wrap gap-3">
                         <template x-for="size in productSizes" :key="size.id">
@@ -158,7 +106,7 @@
                     </div>
                 </div>
 
-                <!-- Add to Cart -->
+                <!-- Order and Add to Cart -->
                 <div class="pt-2 flex flex-col gap-3 md:flex-row">
 
                     <flux:button variant="primary" icon="package" class="w-full md:w-auto hover:cursor-pointer"
@@ -166,56 +114,62 @@
                         Order Now
                     </flux:button>
 
-                    <flux:button icon="shopping-cart" class="w-full md:w-auto hover:cursor-pointer">
+                    {{-- <flux:button icon="shopping-cart" class="w-full md:w-auto hover:cursor-pointer">
                         Add to Cart
-                    </flux:button>
+                    </flux:button> --}}
 
                 </div>
 
 
-                <flux:modal name="placing-order" class="md:w-full">
+                <flux:modal name="placing-order" class="md:w-full"
+                    x-on:order-placed.window="$flux.modal('placing-order').close()">
                     <div class="space-y-6">
                         <div>
                             <flux:heading size="lg">Place Your Order</flux:heading>
                             <flux:text class="mt-2">Enter delivery information to complete your order.</flux:text>
                         </div>
 
-                        <flux:input label="Full Name" placeholder="Enter your name"
+                        <flux:input badge="Required" label="Full Name" placeholder="Enter your name"
                             wire:model.defer="order.customer_name" />
 
-                        <flux:input label="Phone Number" placeholder="01XXXXXXXXX" type="tel"
+                        <flux:input badge="Required" label="Phone Number" placeholder="01XXXXXXXXX" type="tel"
                             wire:model.defer="order.customer_mobile" />
 
-                        <flux:input label="City" placeholder="Enter your city" wire:model.defer="order.city" />
+                        <flux:input badge="Required" label="City" placeholder="Enter your city"
+                            wire:model.defer="order.city" />
 
                         <flux:input label="Upazila" placeholder="Enter your upazila" wire:model.defer="order.upazila" />
 
                         <flux:input label="Thana" placeholder="Enter your thana" wire:model.defer="order.thana" />
 
                         <flux:input label="Post Code" placeholder="Enter your post code"
+                            wire:model.defer="order.post_code" />
+
+                        <flux:input badge="Required" label="Delivery full Address" placeholder="Enter your address"
                             wire:model.defer="order.address" />
 
-                        <flux:input label="Delivery full Address" placeholder="Enter your address"
-                            wire:model.defer="order.address" />
 
-
-                        <flux:radio.group wire:model="payment" label="Select your payment method" required>
+                        <flux:radio.group badge="Required" wire:model.defer='order.selected_shipping_area'
+                            label="Select your shipping area">
                             @foreach ($shippingCost as $item)
-                                <flux:radio value="{{ $item->title }}"
+                                <flux:radio value="{{ $item->id }}"
                                     label="{{ $item->title }}: {{ $item->cost }} ৳"
-                                    @click="()=>{
-                                        selectedShippingMethod = $el.getAttribute('data-title');
+                                    @click="() => {
+                                        selectedShippingArea = $el.getAttribute('data-title');
                                         selectedShipingMethodCost = parseFloat($el.getAttribute('data-cost'));
                                     }"
                                     data-title="{{ $item->title }}" data-cost="{{ $item->cost }}" />
                             @endforeach
                         </flux:radio.group>
 
+
                         <flux:select label="Payment Method" wire:model.defer="order.payment_method">
                             <flux:select.option value="cod">Cash on Delivery</flux:select.option>
                         </flux:select>
 
                         <div>
+                            <flux:text x-text='`Product quantity: ${productQuantity}`'></flux:text>
+
                             <flux:text x-text='`Product price: ${totalProductPrice}৳`'></flux:text>
 
                             <flux:text x-text='`Seleted shpping cost: ${selectedShipingMethodCost}৳`'>
@@ -226,7 +180,7 @@
 
                             <hr class="text-gray-700" />
 
-                            <flux:text x-text='`TotalCost: ${totalCost}৳`'>
+                            <flux:text x-text='`TotalCost: ${totalCost}৳`' class="text-lg font-semibold">
                             </flux:text>
                         </div>
 
@@ -234,10 +188,59 @@
 
                         <div class="flex">
                             <flux:spacer />
-                            <flux:button wire:click="placeOrder" variant="primary">Confirm Order</flux:button>
+                            <flux:button wire:click="placeOrder" variant="primary"
+                                @click="()=> {
+                                    $wire.orderedProduct.product_name = product.name
+                                    $wire.orderedProduct.quantity = productQuantity
+                                    $wire.orderedProduct.selected_color_code = selectedColor
+                                    $wire.orderedProduct.color_extra_price = extraColorPrice
+                                    $wire.orderedProduct.selected_size = selectedSize
+                                    $wire.orderedProduct.size_extra_price = extraSizePrice
+
+                                    $wire.order.extra_shipping_cost = extraProductShippingCost
+                                    $wire.order.total_price = totalCost
+                                }">
+                                Confirm
+                                Order</flux:button>
                         </div>
 
 
+                    </div>
+                </flux:modal>
+
+                <flux:modal name="order-placed-succefull" class="md:w-96"
+                    x-on:order-placed-succefull.window="$flux.modal('order-placed-succefull').show()">
+                    <div class="space-y-6 text-center px-6 py-8">
+                        {{-- ✅ Success Icon --}}
+                        <div
+                            class="mx-auto w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+
+                        {{-- ✅ Message --}}
+                        <h2 class="text-xl font-semibold text-gray-800">Order Placed Successfully!</h2>
+
+                        <h3 class="text-base font-semibold text-gray-700">Your Order ID: {{ $orderTrackingID }}.</h3>
+
+                        <p class="text-gray-600 text-sm">
+                            You can use the Order ID or
+                            <b>{{ $order['customer_mobile'] }}</b> this number to track you order.
+                        </p>
+
+                        <p class="text-gray-600 text-sm">
+                            Thank you for your purchase. We’ve received your order and will process it soon.
+                        </p>
+
+                        {{-- ✅ Button to Close or Redirect --}}
+                        <flux:button variant="primary"
+                            @click="$flux.modal('order-placed-succefull').close(); window.location.replace('/shop');"
+                            class="bg-green-600 hover:cursor-pointer hover:bg-green-700 text-white font-semibold px-4 py-2 rounded">
+                            Continue Shopping
+                        </flux:button>
                     </div>
                 </flux:modal>
 

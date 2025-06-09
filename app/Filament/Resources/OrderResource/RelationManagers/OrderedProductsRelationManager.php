@@ -16,6 +16,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -157,9 +158,7 @@ class OrderedProductsRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('quantity')->sortable(),
-
-                TextColumn::make('selected_color_code')
+                ColorColumn::make('selected_color_code')
                     ->label('Color Code')
                     ->sortable(),
 
@@ -177,7 +176,14 @@ class OrderedProductsRelationManager extends RelationManager
                     ->prefix('৳')
                     ->sortable(),
 
+                TextColumn::make('quantity')
+                    ->sortable(),
+
                 TextColumn::make('extra_shipping_cost')
+                    ->prefix('৳')
+                    ->sortable(),
+
+                TextColumn::make('product_total_price')
                     ->prefix('৳')
                     ->sortable(),
 
@@ -191,7 +197,7 @@ class OrderedProductsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

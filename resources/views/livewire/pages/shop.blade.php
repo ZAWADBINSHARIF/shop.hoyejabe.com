@@ -70,8 +70,8 @@
                             <div class="flex flex-row items-center pt-1">
                                 <flux:icon.currency-bangladeshi class="size-6" />
                                 <p class="text-gray-900">{{ $item->base_price }}</p>
-                                <flux:button icon="shopping-cart" class="hover:cursor-pointer ms-auto">
-                                    Add to Cart
+                                <flux:button icon="eye" class="hover:cursor-pointer ms-auto">
+                                    See details
                                 </flux:button>
                             </div>
                         </a>

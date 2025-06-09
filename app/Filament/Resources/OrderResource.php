@@ -39,6 +39,11 @@ class OrderResource extends Resource
         return $form
             ->schema([
                 Section::make('Customer Info')->schema([
+                    TextInput::make('order_tracking_id')
+                        ->readOnly()
+                        ->visibleOn('edit')
+                        ->maxLength(TextLength::LONG->value),
+
                     TextInput::make('customer_name')
                         ->required()
                         ->maxLength(TextLength::LONG->value),
@@ -72,7 +77,7 @@ class OrderResource extends Resource
                 ])->columns(2),
 
                 Section::make('Shipping')->schema([
-                    Select::make('selected_shipping_cost')
+                    Select::make('selected_shipping_area')
                         ->label('Shipping Method')
                         ->relationship('shipping', 'title') // assumes `title` field in ShippingCost
                         ->required()

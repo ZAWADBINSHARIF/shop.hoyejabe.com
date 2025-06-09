@@ -11,6 +11,7 @@ class OrderedProduct extends Model
         'product_id',
         'product_name',
         'quantity',
+        'product_total_price',
         'selected_color_code',
         'color_extra_price',
         'selected_size',
