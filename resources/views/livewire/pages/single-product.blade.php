@@ -226,10 +226,10 @@
 
                         <h3 class="text-base font-semibold text-gray-700">Your Order ID: {{ $orderTrackingID }}.</h3>
 
-                        <p class="text-gray-600 text-sm">
+                        {{-- <p class="text-gray-600 text-sm">
                             You can use the Order ID or
                             <b>{{ $order['customer_mobile'] }}</b> this number to track you order.
-                        </p>
+                        </p> --}}
 
                         <p class="text-gray-600 text-sm">
                             Thank you for your purchase. We’ve received your order and will process it soon.

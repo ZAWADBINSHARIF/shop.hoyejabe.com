@@ -16,11 +16,11 @@ class TrackOrder extends Component
         $this->reset(['order', 'notFound']);
 
         if (!$this->trackingId) {
-            $this->addError('trackingId', 'Tracking ID is required.');
+            $this->addError('trackingId', 'Tracking ID or Mobile number is required.');
             return;
         }
 
-        $this->order = Order::where('order_tracking_id', $this->trackingId)->first();
+        $this->order = Order::where('order_tracking_id', $this->trackingId)->orWhere('customer_mobile', $this->trackingId)->with('orderedProducts')->first();
 
         if (!$this->order) {
             $this->notFound = true;

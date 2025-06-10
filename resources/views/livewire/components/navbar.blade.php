@@ -45,7 +45,7 @@
                 </span>
             </a>
 
-            <a href="/track-order" x-data="{
+            {{-- <a href="/track-order" x-data="{
                 active: {{ Route::is('track-order') ? 'true' : 'false' }},
                 hover: false
             }"
@@ -61,7 +61,7 @@
                         x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
                         x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
                 </span>
-            </a>
+            </a> --}}
 
             <a href="/about" x-data="{
                 active: {{ Route::is('about') ? 'true' : 'false' }},
