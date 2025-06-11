@@ -4,7 +4,7 @@
         <a href="/"
             class="relative z-10 flex items-center w-auto text-3xl leading-none text-black select-none space-x-2">
             <flux:icon.paw-print class="size-8" />
-            <p>LionBD</p>
+            <p>{{ $companyDetails->name }}</p>
         </a>
 
         <nav
@@ -45,24 +45,6 @@
                 </span>
             </a>
 
-            {{-- <a href="/track-order" x-data="{
-                active: {{ Route::is('track-order') ? 'true' : 'false' }},
-                hover: false
-            }"
-                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
-                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
-                @mouseleave="hover = false">
-
-                <span class="block">Track Order</span>
-                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover || active"
-                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
-                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
-                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
-                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
-                </span>
-            </a> --}}
-
             <a href="/about" x-data="{
                 active: {{ Route::is('about') ? 'true' : 'false' }},
                 hover: false
@@ -81,12 +63,18 @@
                 </span>
             </a>
 
-            {{-- <a href="contact-us"
-                class="relative font-medium leading-6 text-gray-600 transition duration-150 ease-out hover:text-gray-900"
-                x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
-                <span class="block">Cantact Us</span>
+            {{-- <a href="/contact-us" x-data="{
+                active: {{ Route::is('contact-us') ? 'true' : 'false' }},
+                hover: false
+            }"
+                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
+                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
+                @mouseleave="hover = false">
+
+                <span class="block">Contact Us</span>
                 <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover" class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
+                    <span x-show="hover || active"
+                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
                         x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
                         x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
                         x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
@@ -100,9 +88,9 @@
                 class="relative z-10 inline-flex items-center space-x-3 md:mt-0 md:ml-5 lg:justify-end hover:cursor-pointer">
 
                 <flux:button class="hover:cursor-pointer">
-                    <a href="tel:+8801732754990" class="flex flex-row items-center justify-center gap-2">
+                    <a href="tel:{{$contact->mobile_number}}" class="flex flex-row items-center justify-center gap-2">
                         <flux:icon.headset />
-                        <flux:text class="text-black hidden md:block">+8801732754990</flux:text>
+                        <flux:text class="text-black hidden md:block">{{ $contact->mobile_number ?? '+8801XXXXXXXXX'}}</flux:text>
                         <flux:text class="text-black block md:hidden">Call Us</flux:text>
                     </a>
                 </flux:button>
