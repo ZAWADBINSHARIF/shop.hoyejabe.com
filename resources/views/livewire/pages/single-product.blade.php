@@ -109,10 +109,15 @@
                 <!-- Order and Add to Cart -->
                 <div class="pt-2 flex flex-col gap-3 md:flex-row">
 
-                    <flux:button variant="primary" icon="package" class="w-full md:w-auto hover:cursor-pointer"
-                        @click="if (validateSelection()) $flux.modal('placing-order').show()">
-                        Order Now
-                    </flux:button>
+                    @if ($product->out_of_stock)
+                        <flux:text color='rose' variant="strong">This product is out of stock</flux:text>
+                    @else
+                        <flux:button variant="primary" icon="package" class="w-full md:w-auto hover:cursor-pointer"
+                            @click="if (validateSelection()) $flux.modal('placing-order').show()">
+                            Order Now
+                        </flux:button>
+                    @endif
+
 
                     {{-- <flux:button icon="shopping-cart" class="w-full md:w-auto hover:cursor-pointer">
                         Add to Cart

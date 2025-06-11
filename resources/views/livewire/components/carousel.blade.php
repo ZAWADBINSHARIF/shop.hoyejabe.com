@@ -1,4 +1,4 @@
-<div x-data="carouselComponent()" class="relative container mx-auto" style="max-width:1600px;">
+<div x-data="carouselComponent()" x-show="slides > 0" class="relative container mx-auto" style="max-width:1600px;">
     <div class="relative overflow-hidden w-full" style="height: 50vh;">
         <template x-for="(item, index) in carousel" :key="index">
             <div x-show="activeSlide === index"
