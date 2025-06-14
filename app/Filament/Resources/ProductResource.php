@@ -9,6 +9,7 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Forms\Components\BasicEditor;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\size;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -73,7 +74,26 @@ class ProductResource extends Resource
                         ->label('Category')
                         ->required()
                         ->relationship('category', 'name')
-                        ->native(false),
+                        ->native(false)
+                        ->createOptionForm([
+                            TextInput::make('name')
+                                ->required()
+                                ->unique(ProductCategory::class, 'name', ignoreRecord: true)
+                                ->maxLength(TextLength::MEDIUM->value)
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(function (string $operation, Set $set, string|null $state) {
+
+                                    if ($operation) {
+                                        $set('slug', Str::slug($state, separator: "-"));
+                                    }
+                                }),
+
+                            TextInput::make('slug')
+                                ->required()
+                                ->readOnly()
+                                ->unique(ProductCategory::class, 'slug', ignoreRecord: true)
+                                ->maxLength(TextLength::MEDIUM->value),
+                        ]),
 
                     Section::make()->schema([
                         Toggle::make('published')
@@ -127,6 +147,7 @@ class ProductResource extends Resource
                                     ->native(false)
                                     ->createOptionForm([
                                         TextInput::make('value')
+                                            ->unique(Size::class, 'value', ignoreRecord: true)
                                             ->required()
                                             ->maxLength(TextLength::MEDIUM->value)
                                     ]),

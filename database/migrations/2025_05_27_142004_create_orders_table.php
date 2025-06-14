@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('upazila')->nullable();
             $table->string('thana')->nullable();
             $table->string('post_code')->nullable();
-            $table->foreignId('selected_shipping_area')->constrained('shipping_costs');
+            $table->foreignId('selected_shipping_area')->nullable()->constrained('shipping_costs')->cascadeOnUpdate()->nullOnDelete();
             $table->decimal('shipping_cost', 10, 2);
             $table->decimal('extra_shipping_cost', 10, 2)->default(0);
             $table->decimal('total_price', 10, 2);

@@ -58,6 +58,10 @@ class Product extends Model
         });
     }
 
+    public static function publishedProducts()
+    {
+        return self::where('published', true);
+    }
 
     public function category(): BelongsTo
     {

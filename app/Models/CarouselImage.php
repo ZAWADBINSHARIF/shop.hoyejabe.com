@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CarouselImage extends Model
 {
-    protected $fillable = ['title', 'image', 'product_url'];
+    protected $fillable = ['title', 'image', 'product_url', 'sort'];
 
     protected static function booted()
     {

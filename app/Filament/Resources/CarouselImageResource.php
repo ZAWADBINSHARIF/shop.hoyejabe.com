@@ -46,6 +46,8 @@ class CarouselImageResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('sort')
+            ->defaultSort('sort')
             ->columns([
                 ImageColumn::make('image'),
                 TextColumn::make('title'),

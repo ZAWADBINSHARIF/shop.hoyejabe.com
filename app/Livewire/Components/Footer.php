@@ -12,7 +12,7 @@ class Footer extends Component
 
     public function mount()
     {
-        $this->contact = Contact::firstOrFail();
+        $this->contact = Contact::first();
     }
 
     public function render()

@@ -57,7 +57,7 @@ class Shop extends Component
 
     public function render()
     {
-        $query = Product::query()->where('published', true);
+        $query = Product::publishedProducts()->where('published', true);
 
         if ($this->category) {
             $query->whereHas('category', function ($query) {

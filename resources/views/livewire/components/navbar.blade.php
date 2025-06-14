@@ -4,7 +4,7 @@
         <a href="/"
             class="relative z-10 flex items-center w-auto text-3xl leading-none text-black select-none space-x-2">
             <flux:icon.paw-print class="size-8" />
-            <p>{{ $companyDetails->name }}</p>
+            <p>{{ $companyDetails->name ?? 'No Name' }}</p>
         </a>
 
         <nav
@@ -87,13 +87,17 @@
             <div
                 class="relative z-10 inline-flex items-center space-x-3 md:mt-0 md:ml-5 lg:justify-end hover:cursor-pointer">
 
-                <flux:button class="hover:cursor-pointer">
-                    <a href="tel:{{$contact->mobile_number}}" class="flex flex-row items-center justify-center gap-2">
-                        <flux:icon.headset />
-                        <flux:text class="text-black hidden md:block">{{ $contact->mobile_number ?? '+8801XXXXXXXXX'}}</flux:text>
-                        <flux:text class="text-black block md:hidden">Call Us</flux:text>
-                    </a>
-                </flux:button>
+                @if ($contact?->mobile_number)
+                    <flux:button class="hover:cursor-pointer">
+                        <a href="tel:{{ $contact->mobile_number }}"
+                            class="flex flex-row items-center justify-center gap-2">
+                            <flux:icon.headset />
+                            <flux:text class="text-black hidden md:block">{{ $contact->mobile_number }}
+                            </flux:text>
+                            <flux:text class="text-black block md:hidden">Call Us</flux:text>
+                        </a>
+                    </flux:button>
+                @endif
 
             </div>
             {{-- <div class="relative z-10 inline-flex items-center space-x-3 mt-3 md:mt-0 md:ml-5 lg:justify-end hover:cursor-pointer"

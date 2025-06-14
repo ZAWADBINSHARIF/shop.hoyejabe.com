@@ -18,7 +18,7 @@ class LatestProducts extends Component
 
     public function mount()
     {
-    $this->latestProducts = Product::latest()->take($this->totalShownProducts)->get();
+        $this->latestProducts = Product::publishedProducts()->latest()->take($this->totalShownProducts)->get();
     }
 
     public function render()

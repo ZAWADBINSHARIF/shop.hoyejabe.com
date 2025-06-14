@@ -14,8 +14,8 @@ class Navbar extends Component
 
     public function mount()
     {
-        $this->companyDetails = CompanyDetails::firstOrFail();
-        $this->contact = Contact::firstOrFail();
+        $this->companyDetails = CompanyDetails::first();
+        $this->contact = Contact::first();
     }
 
     public function render()

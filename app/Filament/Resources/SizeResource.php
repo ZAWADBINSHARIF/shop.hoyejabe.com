@@ -2,18 +2,23 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\TextLength;
 use App\Filament\Resources\SizeResource\Pages;
 use App\Filament\Resources\SizeResource\RelationManagers;
 use App\Models\Size;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Collection;
 
 class SizeResource extends Resource
 {
@@ -25,7 +30,10 @@ class SizeResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make("value")
+                TextInput::make('value')
+                    ->unique(Size::class, 'value', ignoreRecord: true)
+                    ->required()
+                    ->maxLength(TextLength::MEDIUM->value)
             ]);
     }
 
@@ -43,7 +51,34 @@ class SizeResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    BulkAction::make('delete')
+                        ->label('Delete selected')
+                        ->color('danger')
+                        ->icon('heroicon-m-trash')
+                        ->action(function (Collection $records) {
+                            try {
+                                foreach ($records as $record) {
+                                    $record->delete();
+                                }
+
+                                Notification::make()
+                                    ->title('Deleted successfully')
+                                    ->success()
+                                    ->send();
+                            } catch (QueryException $e) {
+                                if ($e->getCode() == '23000' && str_contains($e->getMessage(), '1451')) {
+                                    Notification::make()
+                                        ->title('Cannot delete records')
+                                        ->body('One or more selected items are linked to other records (Products) and cannot be deleted.')
+                                        ->warning()
+                                        ->send();
+                                } else {
+                                    throw $e;
+                                }
+                            }
+                        })
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }

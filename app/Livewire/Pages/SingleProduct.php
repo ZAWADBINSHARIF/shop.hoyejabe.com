@@ -47,11 +47,6 @@ class SingleProduct extends Component
 
     public function placeOrder()
     {
-
-        // sleep(2);
-
-        // return;
-
         $this->validate([
             'order.customer_name' => 'required|string|max:255',
             'order.customer_mobile' => 'required|string|max:20',
@@ -97,9 +92,6 @@ class SingleProduct extends Component
 
         OrderedProduct::create($this->orderedProduct);
 
-        // dump($this->order);
-        // dump($this->orderedProduct);
-
         $this->dispatch('order-placed');
         $this->dispatch('order-placed-succefull');
     }
@@ -107,7 +99,7 @@ class SingleProduct extends Component
     public function mount(string $product_slug)
     {
         $this->slug = $product_slug;
-        $this->product = Product::with('colors', 'sizes.size')->where('slug', $this->slug)->firstOrFail();
+        $this->product = Product::publishedProducts()->with('colors', 'sizes.size')->where('slug', $this->slug)->firstOrFail();
         $this->shippingCost = ShippingCost::all();
     }
 

@@ -8,8 +8,8 @@
 
 
         <span class="inline-flex justify-center mt-4 space-x-5 sm:ml-auto sm:mt-0 sm:justify-start">
-            @if ($contact->facebook)
-                <a href="{{ $contact->facebook }}" class="text-gray-400 hover:text-gray-500">
+            @if ($contact?->facebook)
+                <a href="{{ $contact?->facebook }}" class="text-gray-400 hover:text-gray-500">
                     <span class="sr-only">Facebook</span>
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill-rule="evenodd"
@@ -19,8 +19,8 @@
                 </a>
             @endif
 
-            @if ($contact->whatsapp)
-                <a href="https://{{ $contact->whatsapp }}"
+            @if ($contact?->whatsapp)
+                <a href="https://{{ $contact?->whatsapp }}"
                     class="text-gray-400 hover:text-gray-500 flex items-center justify-center">
                     <span class="sr-only">WhatsApp</span>
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 512 512" aria-hidden="true">
@@ -31,8 +31,8 @@
                 </a>
             @endif
 
-            @if ($contact->messanger)
-                <a href="https://{{ $contact->messanger }}"
+            @if ($contact?->messanger)
+                <a href="https://{{ $contact?->messanger }}"
                     class="text-gray-400 hover:text-gray-500 flex items-center justify-center">
                     <span class="sr-only">Messenger</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -42,8 +42,8 @@
                 </a>
             @endif
 
-            @if ($contact->instagram)
-                <a href="{{ $contact->instagram }}" class="text-gray-400 hover:text-gray-500">
+            @if ($contact?->instagram)
+                <a href="{{ $contact?->instagram }}" class="text-gray-400 hover:text-gray-500">
                     <span class="sr-only">Instagram</span>
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill-rule="evenodd"
