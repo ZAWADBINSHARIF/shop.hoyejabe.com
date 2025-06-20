@@ -185,11 +185,14 @@
 
                             <hr class="text-gray-700" />
 
-                            <flux:text x-text='`TotalCost: ${totalCost}৳`' class="text-lg font-semibold">
-                            </flux:text>
+                            <div class="flex flex-row justify-between">
+                                <flux:text x-text='`TotalCost: ${totalCost}৳`' class="text-lg font-semibold">
+                                </flux:text>
+
+                                <flux:error name="placing_order_problem" />
+
+                            </div>
                         </div>
-
-
 
                         <div class="flex">
                             <flux:spacer />

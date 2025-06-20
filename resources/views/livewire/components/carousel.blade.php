@@ -16,7 +16,7 @@
                 :style="`background-image: url(storage/${item.image});`">
 
                 <div class="h-full w-full flex items-center">
-                    <div class="container mx-auto px-12 md:px-6">
+                    <div class="container mx-auto px-14">
                         <div class="w-full lg:w-1/2">
 
                             <p class="text-2xl my-4 p-2 px-4 rounded-xl w-fit bg-white/60" x-show="item.title"
@@ -34,12 +34,12 @@
 
         <!-- Buttons -->
         <button @click="prevSlide"
-            class="absolute left-4 md:left-7 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white hover:cursor-pointer">
-            <flux:icon.chevron-left />
+            class="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white hover:cursor-pointer">
+            <flux:icon.chevron-left class="size-4 md:size-6" />
         </button>
         <button @click="nextSlide"
-            class="absolute right-4 md:right-7 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white hover:cursor-pointer">
-            <flux:icon.chevron-right />
+            class="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 z-10 bg-white text-black text-2xl p-2 rounded-full shadow hover:bg-black hover:text-white hover:cursor-pointer">
+            <flux:icon.chevron-right class="size-4 md:size-6" />
         </button>
 
         <!-- Indicators -->

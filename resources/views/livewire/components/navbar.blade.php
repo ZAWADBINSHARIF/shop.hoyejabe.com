@@ -3,7 +3,8 @@
     <div class="container flex flex-col flex-wrap items-center justify-between py-5 mx-auto md:flex-row max-w-7xl">
         <a href="/"
             class="relative z-10 flex items-center w-auto text-3xl leading-none text-black select-none space-x-2">
-            <flux:icon.paw-print class="size-8" />
+            <img src="/storage/{{ $companyDetails->logo }}" width="{{$logo['width']}}" height="{{$logo['height']}}" />
+            {{-- <flux:icon.paw-print class="size-12" /> --}}
             <p>{{ $companyDetails->name ?? 'No Name' }}</p>
         </a>
 

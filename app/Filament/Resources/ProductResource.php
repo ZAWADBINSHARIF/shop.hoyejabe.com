@@ -157,6 +157,7 @@ class ProductResource extends Resource
                                     ->default(0)
                                     ->prefix('৳'),
                             ])
+                            ->default([])
                             ->reorderable(false)
                             ->collapsible(),
 
@@ -171,6 +172,7 @@ class ProductResource extends Resource
                                     ->default(0)
                                     ->prefix('৳'),
                             ])
+                            ->default([])
                             ->reorderable(false)
                             ->collapsible()
                     ])->columns(2)->columnSpan(1),

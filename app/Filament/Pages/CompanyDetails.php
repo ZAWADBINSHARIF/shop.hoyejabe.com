@@ -2,10 +2,13 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\StoragePath;
 use App\Enums\TextLength;
 use App\Forms\Components\BasicEditor;
 use App\Models\CompanyDetails as ModelsCompanyDetails;
 use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -54,6 +57,20 @@ class CompanyDetails extends Page
                 [
                     Section::make()
                         ->schema([
+                            FileUpload::make('logo')
+                                ->image()
+                                ->helperText('Upload a transparent')
+                                ->directory(StoragePath::LOGOS->value)
+                                ->disk('public'),
+                            Section::make("Width and Height of Logo")
+                                ->schema([
+                                    TextInput::make("width")
+                                        ->numeric()
+                                        ->minValue(0),
+                                    TextInput::make("height")
+                                        ->numeric()
+                                        ->minValue(0)
+                                ])->columns(2),
                             TextInput::make('name')->maxLength(TextLength::SHORT->value)->required(),
                             BasicEditor::make('about')->maxLength(TextLength::LARGE->value)->required()
                         ])

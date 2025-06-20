@@ -47,7 +47,7 @@ class SingleProduct extends Component
 
     public function placeOrder()
     {
-        $this->validate([
+        $validator = $this->validate([
             'order.customer_name' => 'required|string|max:255',
             'order.customer_mobile' => 'required|string|max:20',
             'order.address' => 'required|string|max:255',
@@ -71,11 +71,18 @@ class SingleProduct extends Component
             'order.selected_shipping_area' => 'shipping area',
         ]);
 
+        $checkProduct = Product::publishedProducts()->where('slug', $this->slug)->firstOrFail();
+
+        if (!$checkProduct->published || $checkProduct->out_of_stock) {
+            $this->addError('placing_order_problem', 'The product is out of stock.');
+        }
+
         $shippingAreaDetails = ShippingCost::findOrFail($this->order['selected_shipping_area']);
 
 
         if ($shippingAreaDetails) {
             $this->order['shipping_cost'] = (float) $shippingAreaDetails->cost;
+            return;
         }
 
         $this->order['order_status'] = OrderStatus::Pending->value;
