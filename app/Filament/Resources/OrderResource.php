@@ -148,13 +148,15 @@ class OrderResource extends Resource
                 TextColumn::make('extra_shipping_cost')->prefix('৳')->sortable(),
                 TextColumn::make('total_price')->prefix('৳')->sortable(),
 
-                TextColumn::make('order_status')
-                    ->badge()
-                    ->color(
-                        fn(OrderStatus $state): string => $state->getColor() ?? 'gray'
-                    )
-                    ->formatStateUsing(fn(OrderStatus $state) => ucwords(str_replace('_', ' ', $state->value))),
+                // TextColumn::make('order_status')
+                //     ->badge()
+                //     ->color(
+                //         fn(OrderStatus $state): string => $state->getColor() ?? 'gray'
+                //     )
+                //     ->formatStateUsing(fn(OrderStatus $state) => ucwords(str_replace('_', ' ', $state->value))),
 
+                SelectColumn::make('order_status')
+                    ->options(OrderStatus::class),
 
                 TextColumn::make('created_at')
                     ->label('Order Date')
