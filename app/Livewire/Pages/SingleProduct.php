@@ -82,7 +82,6 @@ class SingleProduct extends Component
 
         if ($shippingAreaDetails) {
             $this->order['shipping_cost'] = (float) $shippingAreaDetails->cost;
-            return;
         }
 
         $this->order['order_status'] = OrderStatus::Pending->value;
