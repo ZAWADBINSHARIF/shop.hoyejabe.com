@@ -129,6 +129,8 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('order_tracking_id'),
+
                 TextColumn::make('customer_name')->searchable()->sortable(),
                 TextColumn::make('customer_mobile')->searchable(),
                 TextColumn::make('city')->sortable(),
@@ -148,13 +150,6 @@ class OrderResource extends Resource
                 TextColumn::make('extra_shipping_cost')->prefix('৳')->sortable(),
                 TextColumn::make('total_price')->prefix('৳')->sortable(),
 
-                // TextColumn::make('order_status')
-                //     ->badge()
-                //     ->color(
-                //         fn(OrderStatus $state): string => $state->getColor() ?? 'gray'
-                //     )
-                //     ->formatStateUsing(fn(OrderStatus $state) => ucwords(str_replace('_', ' ', $state->value))),
-
                 SelectColumn::make('order_status')
                     ->options(OrderStatus::class),
 
@@ -172,6 +167,7 @@ class OrderResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -193,6 +189,7 @@ class OrderResource extends Resource
             'index' => Pages\ListOrders::route('/'),
             // 'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
+            // 'view' => Pages\ViewOrder::route('/{record}'),
         ];
     }
 }
