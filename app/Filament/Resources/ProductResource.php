@@ -183,12 +183,13 @@ class ProductResource extends Resource
                     ->reorderable()
                     ->image()
                     ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
+                    ->imageCropAspectRatio('1:1')
                     ->rules(['dimensions:ratio=1/1'])
                     ->helperText('Upload a aspect ratio 1:1 image (PNG/JPG/jpeg).')
                     ->maxFiles(10)
-                    ->directory(StoragePath::PRODUCT_IMAGES->value)
                     ->required()
-                    ->disk('public'),
+                    ->disk('public')
+                    ->directory(StoragePath::PRODUCT_IMAGES->value),
 
             ]);
     }
