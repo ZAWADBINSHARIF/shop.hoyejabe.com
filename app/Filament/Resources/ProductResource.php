@@ -183,6 +183,10 @@ class ProductResource extends Resource
                     ->reorderable()
                     ->image()
                     ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '1:1',
+                    ])
                     ->imageCropAspectRatio('1:1')
                     ->rules(['dimensions:ratio=1/1'])
                     ->helperText('Upload a aspect ratio 1:1 image (PNG/JPG/jpeg).')

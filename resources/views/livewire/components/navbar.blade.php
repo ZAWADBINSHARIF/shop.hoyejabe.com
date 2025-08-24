@@ -70,6 +70,25 @@
                 </span>
             </a>
 
+            <a href="/track-order" x-data="{
+                active: {{ Route::is('track-order') ? 'true' : 'false' }},
+                hover: false
+            }"
+                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
+                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
+                @mouseleave="hover = false">
+
+                <span class="block">Track Order</span>
+                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
+                    <span x-show="hover || active"
+                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
+                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
+                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
+                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
+                </span>
+            </a>
+
+
             {{-- <a href="/contact-us" x-data="{
                 active: {{ Route::is('contact-us') ? 'true' : 'false' }},
                 hover: false

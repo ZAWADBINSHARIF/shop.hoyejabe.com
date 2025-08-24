@@ -32,7 +32,7 @@ class Order extends Model
     {
         static::creating(function (Order $order) {
             do {
-                $randomId = 'ORD' . strtoupper(Str::random(12));
+                $randomId = "ORD" . "-" . now(6)->format('dmY') . "-" . strtoupper(Str::random(8));
             } while (self::where('order_tracking_id', $randomId)->exists());
 
             $order->order_tracking_id = $randomId;

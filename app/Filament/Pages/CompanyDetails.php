@@ -60,6 +60,7 @@ class CompanyDetails extends Page
                             FileUpload::make('logo')
                                 ->image()
                                 ->helperText('Upload a transparent')
+                                ->imageEditor()
                                 ->directory(StoragePath::LOGOS->value)
                                 ->disk('public'),
                             Section::make("Width and Height of Logo")

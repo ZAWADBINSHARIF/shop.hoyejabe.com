@@ -45,6 +45,11 @@ class SingleProduct extends Component
         'extra_shipping_cost' => 0,
     ];
 
+    private function productTotalPrice(): float
+    {
+        return (float) ($this->orderedProduct['base_price'] + $this->orderedProduct['color_extra_price'] + $this->orderedProduct['size_extra_price'] + $this->orderedProduct['extra_shipping_cost']) * $this->orderedProduct['quantity'];
+    }
+
     public function placeOrder()
     {
         $validator = $this->validate([
@@ -94,8 +99,7 @@ class SingleProduct extends Component
         $this->orderedProduct['product_id'] = $this->product->id;
         $this->orderedProduct['base_price'] = (float) $this->product->base_price;
         $this->orderedProduct['extra_shipping_cost'] = (float) $this->product->extra_shipping_cost;
-        $this->orderedProduct['product_total_price'] = ($this->orderedProduct['base_price'] + $this->orderedProduct['color_extra_price'] + $this->orderedProduct['size_extra_price']) * $this->orderedProduct['quantity'] + $this->orderedProduct['extra_shipping_cost'];
-
+        $this->orderedProduct['product_total_price'] = $this->productTotalPrice();
         OrderedProduct::create($this->orderedProduct);
 
         $this->dispatch('order-placed');
