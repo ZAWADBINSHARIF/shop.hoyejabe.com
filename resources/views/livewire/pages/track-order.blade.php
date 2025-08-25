@@ -55,7 +55,7 @@
                                 <th class="px-4 py-2 border-y">Size</th>
                                 <th class="px-4 py-2 border-y">Color</th>
                                 <th class="px-4 py-2 border-y">Quantity</th>
-                                <th class="px-4 py-2 border-y">Base Price</th>
+                                <th class="px-4 py-2 border-y">Unit Price</th>
                                 <th class="px-4 py-2 border-y">Total</th>
                             </tr>
                         </thead>
@@ -86,7 +86,9 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-2 border-y text-center">{{ $product->quantity }} </td>
-                                    <td class="px-4 py-2 border-y">৳{{ number_format($product->base_price, 2) }}</td>
+                                    <td class="px-4 py-2 border-y">
+                                        ৳{{ number_format($product->base_price, 2) + $product->color_extra_price + $product->size_extra_price }}
+                                    </td>
                                     <td class="px-4 py-2 border-y font-semibold">
                                         ৳{{ number_format($product->product_total_price, 2) }}</td>
                                 </tr>
