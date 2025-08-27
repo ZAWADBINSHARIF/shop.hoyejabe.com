@@ -267,4 +267,54 @@
             @endif
         </div>
     </div>
+
+
+    <!-- Product Reviews & Comments -->
+    <div class="py-10 mt-12">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <!-- Title -->
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Comments</h2>
+
+            <!-- Example Reviews -->
+            <div class="space-y-6 mb-8">
+                <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-semibold text-gray-800">John Doe</h4>
+                        <span class="text-xs text-gray-500">2 days ago</span>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Great product! Quality is amazing and delivery was fast.
+                    </p>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-semibold text-gray-800">Jane Smith</h4>
+                        <span class="text-xs text-gray-500">1 week ago</span>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Product is good but packaging could be improved.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Add Comment Form -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Add a Comment</h3>
+
+                <form class="space-y-4">
+
+                    <flux:textarea label="Your Comment" placeholder="Write something..." />
+
+                    <div class="flex justify-end">
+                        <flux:button variant="primary" class="hover:cursor-pointer">
+                            Post Comment
+                        </flux:button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
 </section>

@@ -3,7 +3,7 @@
 
     {{-- Flux UI Input --}}
     <flux:field label="Tracking ID" hint="Enter the unique tracking ID you received" :required="true">
-        <flux:input wire:model.defer="trackingId" icon="magnifying-glass" placeholder="ORD-123456789"
+        <flux:input wire:model.defer="trackingId" icon="magnifying-glass" placeholder="ORD-DDMMYYYY-ABC123"
             class="flux-input w-full" />
         <flux:text class="text-xs">Write your Order ID or Tracking ID to know the order status</flux:text>
         <flux:error name="trackingId" />

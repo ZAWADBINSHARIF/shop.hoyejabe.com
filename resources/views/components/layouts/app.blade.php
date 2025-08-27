@@ -26,9 +26,12 @@
 
     <livewire:components.navbar />
 
-    {{-- <livewire:components.cart-slider /> --}}
+    <livewire:components.cart-slider />
 
     {{ $slot }}
+
+    <livewire:modals.sign-up />
+    <livewire:modals.sign-in />
 
     <livewire:components.footer />
 

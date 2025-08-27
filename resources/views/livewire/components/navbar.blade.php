@@ -1,138 +1,102 @@
-<nav x-data wire:cloak class="relative w-full px-8 text-gray-700 bg-accent-foreground body-font"
+<nav x-data="{ open: false }" wire:cloak 
+    class="relative w-full px-6 text-gray-700 bg-accent-foreground body-font"
     data-tails-scripts="//unpkg.com/alpinejs" {!! $attributes ?? '' !!}>
-    <div class="container flex flex-col flex-wrap items-center justify-between py-5 mx-auto md:flex-row max-w-7xl">
-        <a href="/"
-            class="relative z-10 flex items-center w-auto text-3xl leading-none text-black select-none space-x-2">
+    
+    <div class="container flex items-center justify-between py-4 mx-auto max-w-7xl">
 
+        <!-- Logo + Company Name -->
+        <a href="/" class="relative z-10 flex items-center space-x-2 text-3xl leading-none text-black select-none">
             @if ($companyDetails?->logo)
-                <img src="/storage/{{ $companyDetails->logo }}" width="{{ $logo['width'] }}"
-                    height="{{ $logo['height'] }}" />
+                <img src="/storage/{{ $companyDetails->logo }}" width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" />
             @else
-                <flux:icon.paw-print class="size-12" />
+                <flux:icon.paw-print class="size-10" />
             @endif
-
-            <p>{{ $companyDetails->name ?? 'No Name' }}</p>
+            <span class="hidden min-[375px]:inline text-lg sm:text-3xl">
+                {{ $companyDetails->name ?? 'No Name' }}
+            </span>
         </a>
 
-        <nav
-            class="top-0 left-0 z-0 flex items-center justify-center w-full h-full py-5 -ml-0 space-x-5 text-base md:-ml-5 md:py-0 md:absolute">
-            <a href="/" x-data="{
-                active: {{ Route::is('home') ? 'true' : 'false' }},
-                hover: false
-            }"
-                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
-                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
-                @mouseleave="hover = false">
-
-                <span class="block">Home</span>
-                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover || active"
-                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
-                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
-                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
-                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
-                </span>
-            </a>
-
-            <a href="/shop" x-data="{
-                active: {{ Route::is('shop') ? 'true' : 'false' }},
-                hover: false
-            }"
-                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
-                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
-                @mouseleave="hover = false">
-
-                <span class="block">Shop</span>
-                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover || active"
-                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
-                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
-                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
-                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
-                </span>
-            </a>
-
-            <a href="/about" x-data="{
-                active: {{ Route::is('about') ? 'true' : 'false' }},
-                hover: false
-            }"
-                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
-                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
-                @mouseleave="hover = false">
-
-                <span class="block">About</span>
-                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover || active"
-                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
-                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
-                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
-                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
-                </span>
-            </a>
-
-            <a href="/track-order" x-data="{
-                active: {{ Route::is('track-order') ? 'true' : 'false' }},
-                hover: false
-            }"
-                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
-                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
-                @mouseleave="hover = false">
-
-                <span class="block">Track Order</span>
-                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover || active"
-                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
-                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
-                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
-                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
-                </span>
-            </a>
-
-
-            {{-- <a href="/contact-us" x-data="{
-                active: {{ Route::is('contact-us') ? 'true' : 'false' }},
-                hover: false
-            }"
-                class="relative font-medium leading-6 transition duration-150 ease-out hover:text-gray-900"
-                :class="active === true ? 'text-gray-900' : 'text-gray-600'" @mouseenter="hover = true"
-                @mouseleave="hover = false">
-
-                <span class="block">Contact Us</span>
-                <span class="absolute bottom-0 left-0 inline-block w-full h-0.5 -mb-1 overflow-hidden">
-                    <span x-show="hover || active"
-                        class="absolute inset-0 inline-block w-full h-full transform bg-gray-900"
-                        x-transition:enter="transition ease duration-200" x-transition:enter-start="scale-0"
-                        x-transition:enter-end="scale-100" x-transition:leave="transition ease-out duration-300"
-                        x-transition:leave-start="scale-100" x-transition:leave-end="scale-0"></span>
-                </span>
-            </a> --}}
-
-        </nav>
-
-        <div>
-            <div
-                class="relative z-10 inline-flex items-center space-x-3 md:mt-0 md:ml-5 lg:justify-end hover:cursor-pointer">
-
-                @if ($contact?->mobile_number)
-                    <flux:button class="hover:cursor-pointer">
-                        <a href="tel:{{ $contact->mobile_number }}"
-                            class="flex flex-row items-center justify-center gap-2">
-                            <flux:icon.headset />
-                            <flux:text class="text-black hidden md:block">{{ $contact->mobile_number }}
-                            </flux:text>
-                            <flux:text class="text-black block md:hidden">Call Us</flux:text>
-                        </a>
-                    </flux:button>
-                @endif
-
-            </div>
-            {{-- <div class="relative z-10 inline-flex items-center space-x-3 mt-3 md:mt-0 md:ml-5 lg:justify-end hover:cursor-pointer"
-                @click="$store.cartSlider.slideOverOpen=true">
-                <flux:icon.shopping-cart class="size-6" />
-                <flux:badge variant="solid" color="indigo" size="sm" class="absolute -top-4 text-white h-5">88
-                </flux:badge>
-            </div> --}}
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-6">
+            <a href="/" class="{{ Route::is('home') ? 'text-gray-900 font-bold' : 'text-gray-600' }} hover:text-gray-900">Home</a>
+            <a href="/shop" class="{{ Route::is('shop') ? 'text-gray-900 font-bold' : 'text-gray-600' }} hover:text-gray-900">Shop</a>
+            <a href="/about" class="{{ Route::is('about') ? 'text-gray-900 font-bold' : 'text-gray-600' }} hover:text-gray-900">About</a>
+            <a href="/track-order" class="{{ Route::is('track-order') ? 'text-gray-900 font-bold' : 'text-gray-600' }} hover:text-gray-900">Track Order</a>
         </div>
 
+        <!-- Desktop Actions -->
+        <div class="hidden md:flex items-center gap-4">
+            @if ($contact?->mobile_number)
+                <a href="tel:{{ $contact->mobile_number }}" class="flex items-center gap-2">
+                    <flux:icon.headset />
+                </a>
+            @endif
+
+            <!-- Cart -->
+            <div class="relative cursor-pointer" @click="$store.cartSlider.slideOverOpen = true">
+                <flux:icon.heart class="size-6" />
+            </div>
+
+            <!-- Cart -->
+            <div class="relative cursor-pointer" @click="$store.cartSlider.slideOverOpen = true">
+                <flux:icon.shopping-cart class="size-6" />
+                <flux:badge variant="solid" color="indigo" size="sm" class="absolute -top-4 -right-3 text-white h-5">88</flux:badge>
+            </div>
+
+            <!-- Auth Buttons -->
+            <flux:modal.trigger name="signin-modal">
+                <flux:button variant="outline">Sign In</flux:button>
+            </flux:modal.trigger>
+            <flux:modal.trigger name="signup-modal">
+                <flux:button variant="primary">Sign Up</flux:button>
+            </flux:modal.trigger>
+        </div>
+
+        <!-- Mobile Actions -->
+        <div class="flex items-center gap-3 md:hidden">
+            <!-- Cart -->
+            <div class="relative cursor-pointer" @click="$store.cartSlider.slideOverOpen = true">
+                <flux:icon.shopping-cart class="size-6" />
+                <flux:badge variant="solid" color="indigo" size="sm" class="absolute -top-4 -right-3 text-white h-5">88</flux:badge>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button @click="open = !open" class="p-2 rounded-lg text-gray-700 hover:bg-gray-200">
+                <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg x-show="open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div x-show="open" class="md:hidden bg-white px-4 pb-4 space-y-3">
+        <a href="/" class="block {{ Route::is('home') ? 'text-gray-900 font-semibold' : 'text-gray-600' }}">Home</a>
+        <a href="/shop" class="block {{ Route::is('shop') ? 'text-gray-900 font-semibold' : 'text-gray-600' }}">Shop</a>
+        <a href="/about" class="block {{ Route::is('about') ? 'text-gray-900 font-semibold' : 'text-gray-600' }}">About</a>
+        <a href="/track-order" class="block {{ Route::is('track-order') ? 'text-gray-900 font-semibold' : 'text-gray-600' }}">Track Order</a>
+
+        <!-- Mobile Auth & Contact -->
+        <div class="pt-3 border-t flex flex-col gap-3">
+            @if ($contact?->mobile_number)
+                <a href="tel:{{ $contact->mobile_number }}" class="flex items-center gap-2 justify-center">
+                    <flux:icon.headset /> {{ $contact->mobile_number }}
+                </a>
+            @endif
+
+            <flux:modal.trigger name="signin-modal">
+                <flux:button variant="outline" class="w-full">Sign In</flux:button>
+            </flux:modal.trigger>
+            <flux:modal.trigger name="signup-modal">
+                <flux:button variant="primary" class="w-full">Sign Up</flux:button>
+            </flux:modal.trigger>
+        </div>
     </div>
 </nav>
