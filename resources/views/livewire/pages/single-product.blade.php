@@ -24,8 +24,16 @@
 
         <!-- Product Details -->
         <div class="space-y-6">
-            <!-- Title -->
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ $product->name }}</h1>
+
+            <div>
+                <!-- Title -->
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ $product->name }}</h1>
+
+                <div class="flex justify-end gap-5">
+                    <flux:icon.share variant="outline" class="size-6 text-slate-500 hover:cursor-pointer"/>
+                    <flux:icon.heart variant="outline" class="size-6 text-slate-500 hover:cursor-pointer" />
+                </div>
+            </div>
 
             <!-- Short Description -->
             <div class="prose text-gray-500 leading-relaxed text-base">

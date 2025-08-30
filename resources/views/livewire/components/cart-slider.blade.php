@@ -1,4 +1,4 @@
-<div x-data="$store.cartSlider" class="relative z-50 w-auto h-auto">
+<div x-data="urlHashChangeEvent('#cart', 'cartSlider')"class="relative z-50 w-auto h-auto">
 
     <template x-teleport="body">
         <div x-show="$store.cartSlider.slideOverOpen" @keydown.window.escape="$store.cartSlider.slideOverOpen=false"

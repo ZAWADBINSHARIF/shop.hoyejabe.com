@@ -21,17 +21,33 @@
 
 </head>
 
+{{-- <style>
+    :root {
+        --color-accent: var(--color-blue-500);
+        --color-accent-content: var(--color-blue-600);
+        --color-accent-foreground: var(--color-white);
+    }
+
+    .dark {
+        --color-accent: var(--color-rose-500);
+        --color-accent-content: var(--color-rose-400);
+        --color-accent-foreground: var(--color-white);
+    }
+</style> --}}
 
 <body>
 
     <livewire:components.navbar />
 
     <livewire:components.cart-slider />
+    <livewire:components.favorite-slider />
+    <livewire:components.profile-slider />
 
     {{ $slot }}
 
     <livewire:modals.sign-up />
     <livewire:modals.sign-in />
+    <livewire:modals.forgot-password />
 
     <livewire:components.footer />
 

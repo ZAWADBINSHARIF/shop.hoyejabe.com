@@ -58,7 +58,47 @@ export default function productComponent(product, productSizes, productColors) {
     };
 }
 
+export function urlHashChangeEvent(hash, storedValueName, ...other) {
+    return {
+        ...other,
+        init() {
+            if (window.location.hash === hash) {
+                this.$store[storedValueName].slideOverOpen = true;
+            } else {
+                this.$store[storedValueName].slideOverOpen = false;
+            }
+            window.addEventListener('hashchange', () => {
+                const currentHash = window.location.hash;
+
+                if (currentHash === hash) {
+                    this.$store[storedValueName].slideOverOpen = true;
+                } else {
+                    this.$store[storedValueName].slideOverOpen = false;
+
+                }
+            });
+
+            this.$watch('window.location.hash', value => {
+                if (value === hash) {
+                    this.$store[storedValueName].slideOverOpen = true;
+                } else {
+                    this.$store[storedValueName].slideOverOpen = false;
+                }
+            });
+
+            this.$watch(`$store.${storedValueName}.slideOverOpen`, value => {
+                if (value) {
+                    history.pushState(null, '', hash);
+                } else {
+                    history.pushState(null, '', window.location.pathname + window.location.search);
+                }
+            });
+        }
+    };
+}
+
 Alpine.data('productComponent', productComponent);
+Alpine.data('urlHashChangeEvent', urlHashChangeEvent);
 
 document.addEventListener('alpine:init', () => {
     Alpine.store('cartSlider', {
@@ -68,6 +108,9 @@ document.addEventListener('alpine:init', () => {
         slideOverOpen: false
     });
     Alpine.store('categorySlider', {
+        slideOverOpen: false
+    });
+    Alpine.store('profileSlider', {
         slideOverOpen: false
     });
 });

@@ -29,22 +29,10 @@
         </nav>
 
         @foreach ($latestProducts as $item)
-            <div class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center">
-                <a href="shop/{{ $item->slug }}">
-                    <img class="hover:grow hover:shadow-lg rounded-xl" src="storage/{{ $item->images[0] }}">
-                    <div class="pt-3 flex items-center justify-between">
-                        <p class="">{{ $item->name }}</p>
-                    </div>
-                    <div class="flex flex-row items-center pt-1">
-                        <flux:icon.currency-bangladeshi class="size-6" />
-                        <p class="text-gray-900">{{ $item->base_price }}</p>
-                        <flux:button icon="eye" class="hover:cursor-pointer ms-auto">
-                           See details
-                        </flux:button>
-                    </div>
-                </a>
-            </div>
+            <x-single-product-card :className="'w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center'" :slug="$item->slug" :name="$item->name" :image="$item->images[0]"
+                :basePrice="$item->base_price" />
         @endforeach
+
 
         @if ($productCount === 0)
             <div class="flex justify-center items-center flex-col flex-1 mt-18">
