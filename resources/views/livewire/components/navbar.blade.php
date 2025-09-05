@@ -54,11 +54,16 @@
 
             <!-- Auth Buttons -->
             <flux:modal.trigger name="signin-modal">
-                <flux:button variant="outline">Sign In</flux:button>
+                <flux:button class="hover:cursor-pointer" variant="outline">Sign In</flux:button>
             </flux:modal.trigger>
             <flux:modal.trigger name="signup-modal">
-                <flux:button variant="primary">Sign Up</flux:button>
+                <flux:button class="hover:cursor-pointer" variant="primary">Sign Up</flux:button>
             </flux:modal.trigger>
+
+
+            <a href="/my-order">
+                <flux:button class="hover:cursor-pointer">My Order</flux:button>
+            </a>
 
             <flux:avatar @click="$store.profileSlider.slideOverOpen=true" icon="user" class="bg-accent text-white" />
 
@@ -129,6 +134,10 @@
             <flux:modal.trigger name="signup-modal">
                 <flux:button variant="primary" class="w-full">Sign Up</flux:button>
             </flux:modal.trigger>
+
+            <a href="/my-order">
+                <flux:button variant="primary" class="w-full hover:cursor-pointer">My Order</flux:button>
+            </a>
         </div>
     </div>
 

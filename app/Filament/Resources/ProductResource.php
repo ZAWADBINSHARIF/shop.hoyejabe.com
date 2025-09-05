@@ -22,6 +22,7 @@ use Filament\Forms\Components\{
     Repeater,
     Section
 };
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -128,7 +129,25 @@ class ProductResource extends Resource
                         TextInput::make('base_price')
                             ->numeric()
                             ->required()
+                            ->afterStateUpdated(function (?string $state, ?string $old, Get $get, Set $set) {
+
+                                if ($get('discount_percentage')) {
+                                    $set('without_discount_price', $state + $state * ($set('discount_percentage') / 100));
+                                }
+                            })
                             ->prefix('৳'),
+
+                        TextInput::make('discount_percentage')
+                            ->numeric()
+                            ->afterStateUpdated(function (?string $state, ?string $old, Get $get, Set $set) {
+                                $set('without_discount_price', $get('base_price') + $get('base_price') * ($state / 100));
+                            })
+                            ->suffix('%'),
+
+                        TextInput::make('without_discount_price')
+                            ->numeric()
+                            ->prefix('৳')
+                            ->readOnly(),
 
                         TextInput::make('extra_shipping_cost')
                             ->numeric()

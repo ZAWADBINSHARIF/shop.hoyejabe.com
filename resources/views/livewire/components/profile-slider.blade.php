@@ -15,7 +15,7 @@
                             x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
                             x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
                             x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
-                            class="w-screen md:w-[50vw] max-w-full">
+                            class="w-screen md:w-[40vw] max-w-full">
                             <div
                                 class="flex overflow-y-scroll flex-col py-5 h-full bg-white border-l shadow-lg border-neutral-100/70">
                                 <div class="px-4 sm:px-5">
@@ -85,7 +85,7 @@
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="relative flex items-center justify-center w-full p-5 mt-2 text-xs text-gray-400 border rounded-md content border-gray-200/70">
+                                                    class="relative flex items-center justify-start w-full p-5 mt-2 text-xs text-gray-400 border rounded-md content border-gray-200/70">
 
                                                     <div :id="$id(tabId + '-content')" x-show="tabContentActive($el)"
                                                         class="relative">
@@ -112,7 +112,6 @@
                                                                 </div>
                                                             </div>
 
-                                                            <!-- OTP Input -->
                                                             <label
                                                                 class="text-sm font-medium text-gray-700">Email</label>
                                                             <flux:input type="email" />
@@ -165,9 +164,13 @@
 
                                                         <div class="space-y-3">
 
-                                                            <!-- Password -->
-                                                            <flux:input label="Password" type="password"
-                                                                placeholder="Create a password" viewable />
+                                                            <!-- Old Password -->
+                                                            <flux:input label="Old Password" type="password"
+                                                                placeholder="Old password" viewable />
+
+                                                            <!-- New Password -->
+                                                            <flux:input label="New Password" type="password"
+                                                                placeholder="New password" viewable />
 
                                                             <!-- Confirm Password -->
                                                             <flux:input label="Confirm Password" type="password"

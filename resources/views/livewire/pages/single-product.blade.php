@@ -6,7 +6,11 @@
             selectedImage: null
         }" x-init="selectedImage = images[0]">
             <!-- Selected Image -->
-            <div class="aspect-square overflow-hidden rounded-xl mb-4">
+            <div class="relative aspect-square overflow-hidden rounded-xl mb-4">
+                <span
+                    class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-md">
+                    -15%
+                </span>
                 <img :src="`/storage/${selectedImage}`" alt="Product Image"
                     class="w-full h-full object-cover transition duration-300" />
             </div>
@@ -30,7 +34,7 @@
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ $product->name }}</h1>
 
                 <div class="flex justify-end gap-5">
-                    <flux:icon.share variant="outline" class="size-6 text-slate-500 hover:cursor-pointer"/>
+                    <flux:icon.share variant="outline" class="size-6 text-slate-500 hover:cursor-pointer" />
                     <flux:icon.heart variant="outline" class="size-6 text-slate-500 hover:cursor-pointer" />
                 </div>
             </div>
@@ -42,9 +46,15 @@
 
             <div x-data="productComponent(@js($product), @js($product->sizes), @js($product->colors))" x-cloak class="space-y-6">
                 <!-- Price -->
-                <div class="flex items-center gap-2 text-xl md:text-2xl font-semibold text-gray-900">
-                    <flux:icon.currency-bangladeshi class="size-5 md:size-6" />
-                    <span x-text="totalProductPrice"></span>
+                <div class="flex text-xl md:text-2xl font-semibold text-gray-900 gap-1">
+
+                    <!-- Old Price -->
+                    <p class="text-gray-500 line-through text-sm"
+                        x-text="(totalProductPrice+totalProductPrice*0.15)+'৳'"></p>
+
+                    {{-- Discount Price  --}}
+                    <p class="text-gray-900" x-text="totalProductPrice+'৳'"></p>
+
                 </div>
 
                 <!-- Color Options -->
