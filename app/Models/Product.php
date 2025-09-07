@@ -102,4 +102,29 @@ class Product extends Model
     {
         return $this->comments()->published()->count();
     }
+
+    /**
+     * Get the customers who have favorited this product.
+     */
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(Customer::class, 'customer_favorites')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get the favorites for this product.
+     */
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(CustomerFavorite::class);
+    }
+
+    /**
+     * Get total favorites count
+     */
+    public function totalFavorites()
+    {
+        return $this->favorites()->count();
+    }
 }

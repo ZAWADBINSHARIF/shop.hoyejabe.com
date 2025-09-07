@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderedProduct;
 use App\Models\Product;
 use App\Models\ProductComment;
+use App\Models\CustomerFavorite;
 use App\Models\ShippingCost;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class SingleProduct extends Component
     public $comments;
     public $newComment = '';
     public $newRating = 5;
+    public $isFavorited = false;
 
     public $order = [
         'customer_name' => '',
@@ -164,6 +166,37 @@ class SingleProduct extends Component
         $this->product = Product::publishedProducts()->with('colors', 'sizes.size')->where('slug', $this->slug)->firstOrFail();
         $this->shippingCost = ShippingCost::all();
         $this->loadComments();
+        $this->checkFavoriteStatus();
+    }
+    
+    public function checkFavoriteStatus()
+    {
+        if (Auth::guard('customer')->check()) {
+            $customer = Auth::guard('customer')->user();
+            $this->isFavorited = CustomerFavorite::isFavorited($customer->id, $this->product->id);
+        }
+    }
+    
+    public function toggleFavorite()
+    {
+        if (!Auth::guard('customer')->check()) {
+            $this->dispatch('open-signin-modal');
+            session()->flash('error', 'Please login to add products to favorites');
+            return;
+        }
+        
+        $customer = Auth::guard('customer')->user();
+        $isNowFavorited = CustomerFavorite::toggle($customer->id, $this->product->id);
+        
+        $this->isFavorited = $isNowFavorited;
+        
+        if ($isNowFavorited) {
+            $this->dispatch('product-favorited', productId: $this->product->id);
+            session()->flash('success', 'Product added to favorites!');
+        } else {
+            $this->dispatch('product-unfavorited', productId: $this->product->id);
+            session()->flash('success', 'Product removed from favorites');
+        }
     }
 
     public function render()

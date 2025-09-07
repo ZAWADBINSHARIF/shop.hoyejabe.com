@@ -24,7 +24,8 @@ class Customer extends Authenticatable
         'upazila',
         'thana',
         'post_code',
-        'delivery_address',
+        'address',
+        'delivery_address', // Keep for backward compatibility
         'password',
     ];
 
@@ -64,6 +65,31 @@ class Customer extends Authenticatable
     public function comments()
     {
         return $this->hasMany(ProductComment::class);
+    }
+
+    /**
+     * Get the customer's favorite products.
+     */
+    public function favorites()
+    {
+        return $this->hasMany(CustomerFavorite::class);
+    }
+
+    /**
+     * Get the customer's favorite products (direct relation).
+     */
+    public function favoriteProducts()
+    {
+        return $this->belongsToMany(Product::class, 'customer_favorites')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Check if customer has favorited a product
+     */
+    public function hasFavorited($productId): bool
+    {
+        return $this->favorites()->where('product_id', $productId)->exists();
     }
 
     /**

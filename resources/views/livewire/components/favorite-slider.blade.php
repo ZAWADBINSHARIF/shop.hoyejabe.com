@@ -40,101 +40,77 @@
                                     <div class="absolute inset-0 px-4 sm:px-5">
                                         <div class="relative h-full flex flex-col">
 
-                                            {{-- Start Cart items --}}
+                                            {{-- Start Favorite items --}}
 
                                             <div class="overflow-scroll pt-4 flex-1">
+                                                @auth('customer')
+                                                    @forelse($favorites as $product)
+                                                        <div class="w-full py-2 border-y border-dashed border-neutral-300">
+                                                            <div class="flex flex-row gap-2">
+                                                                @if ($product->images && count($product->images) > 0)
+                                                                    <img class="aspect-square object-cover" width="80"
+                                                                        src="{{ asset('storage/' . $product->images[0]) }}"
+                                                                        alt="{{ $product->name }}">
+                                                                @else
+                                                                    <div
+                                                                        class="w-20 h-20 bg-gray-200 flex items-center justify-center">
+                                                                        <span class="text-gray-400 text-xs">No image</span>
+                                                                    </div>
+                                                                @endif
 
-                                                <div class="w-full py-2 border-y border-dashed border-neutral-300">
-                                                    <div class="flex flex-row gap-2">
-                                                        <img class="aspect-square" width="80"
-                                                            src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
+                                                                <div class="flex-1">
+                                                                    <div class="flex justify-between items-start">
+                                                                        <a href="/shop/{{ $product->slug }}"
+                                                                            class="hover:underline">
+                                                                            <p class="font-medium text-sm">
+                                                                                {{ $product->name }}</p>
+                                                                        </a>
+                                                                        <flux:icon.x-mark
+                                                                            wire:click="removeFavorite({{ $product->id }})"
+                                                                            class="size-4 hover:cursor-pointer text-red-500 hover:text-red-700" />
+                                                                    </div>
+                                                                    <div
+                                                                        class="flex items-center w-full justify-between pt-2">
+                                                                        <a href="/shop/{{ $product->slug }}" 
+                                                                           class="text-xs text-blue-600 hover:text-blue-800">
+                                                                            View Product
+                                                                        </a>
 
-                                                        <div>
-                                                            <div class="flex justify-between">
-                                                                <p>Proudct Name</p>
-                                                                <flux:icon.x-mark class="size-4 hover:cursor-pointer" />
-                                                            </div>
-                                                            <div class="flex items-center w-full justify-between pt-2">
-                                                                <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle
-                                                                        class="hover:cursor-pointer" />
-                                                                    <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle
-                                                                        class="hover:cursor-pointer" />
+                                                                        <div class="flex items-center">
+                                                                            <flux:icon.currency-bangladeshi
+                                                                                class="size-5" />
+                                                                            <p class="text-gray-900 font-semibold">
+                                                                                {{ number_format($product->base_price, 0) }}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="flex w-full justify-end">
-                                                                    <flux:icon.currency-bangladeshi class="size-6" />
-                                                                    <p class="text-gray-900">900</p>
-                                                                </div>
                                                             </div>
-
                                                         </div>
-
-                                                    </div>
-                                                </div>
-
-                                                <div class="w-full py-2 border-y border-dashed border-neutral-300">
-                                                    <div class="flex flex-row gap-2">
-                                                        <img class="aspect-square" width="80"
-                                                            src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-
-                                                        <div>
-                                                            <div class="flex justify-between">
-                                                                <p>Proudct Name</p>
-                                                                <flux:icon.x-mark class="size-4 hover:cursor-pointer" />
-                                                            </div>
-                                                            <div class="flex items-center w-full justify-between pt-2">
-                                                                <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle
-                                                                        class="hover:cursor-pointer" />
-                                                                    <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle
-                                                                        class="hover:cursor-pointer" />
-                                                                </div>
-                                                                <div class="flex w-full justify-end">
-                                                                    <flux:icon.currency-bangladeshi class="size-6" />
-                                                                    <p class="text-gray-900">900</p>
-                                                                </div>
-                                                            </div>
-
+                                                    @empty
+                                                        <div
+                                                            class="flex flex-col items-center justify-center py-8 text-gray-500">
+                                                            <flux:icon.heart class="size-12 mb-4 text-gray-300" />
+                                                            <p class="text-base font-medium">No favorites yet</p>
+                                                            <p class="text-sm mt-2">Start adding products to your favorite
+                                                                list!</p>
                                                         </div>
-
+                                                    @endforelse
+                                                @else
+                                                    <div
+                                                        class="flex flex-col items-center justify-center py-8 text-gray-500">
+                                                        <flux:icon.heart class="size-12 mb-4 text-gray-300" />
+                                                        <p class="text-base font-medium">Please sign in</p>
+                                                        <p class="text-sm mt-2">Sign in to view your favorite products</p>
+                                                        <flux:button variant="primary" size="sm" class="mt-4"
+                                                            @click="$store.favoriteSlider.slideOverOpen = false; $dispatch('open-signin-modal')">
+                                                            Sign In
+                                                        </flux:button>
                                                     </div>
-                                                </div>
-
-
-                                                <div class="w-full py-2 border-y border-dashed border-neutral-300">
-                                                    <div class="flex flex-row gap-2">
-                                                        <img class="aspect-square" width="80"
-                                                            src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-
-                                                        <div>
-                                                            <div class="flex justify-between">
-                                                                <p>Proudct Name</p>
-                                                                <flux:icon.x-mark class="size-4 hover:cursor-pointer" />
-                                                            </div>
-                                                            <div class="flex items-center w-full justify-between pt-2">
-                                                                <div class="flex items-center gap-1">
-                                                                    <flux:icon.minus-circle
-                                                                        class="hover:cursor-pointer" />
-                                                                    <flux:input size="sm" />
-                                                                    <flux:icon.plus-circle
-                                                                        class="hover:cursor-pointer" />
-                                                                </div>
-                                                                <div class="flex w-full justify-end">
-                                                                    <flux:icon.currency-bangladeshi class="size-6" />
-                                                                    <p class="text-gray-900">900</p>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-
+                                                @endauth
                                             </div>
 
-                                            {{-- end Cart items --}}
+                                            {{-- end Favorite items --}}
 
 
                                         </div>

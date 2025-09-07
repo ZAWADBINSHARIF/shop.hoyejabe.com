@@ -35,7 +35,10 @@
 
                 <div class="flex justify-end gap-5">
                     <flux:icon.share variant="outline" class="size-6 text-slate-500 hover:cursor-pointer" />
-                    <flux:icon.heart variant="outline" class="size-6 text-slate-500 hover:cursor-pointer" />
+                    <flux:icon.heart 
+                        wire:click="toggleFavorite"
+                        variant="{{ $isFavorited ? 'solid' : 'outline' }}" 
+                        class="size-6 {{ $isFavorited ? 'text-red-500' : 'text-slate-500' }} hover:cursor-pointer hover:scale-110 transition-transform" />
                 </div>
             </div>
 

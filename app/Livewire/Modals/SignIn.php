@@ -55,9 +55,6 @@ class SignIn extends Component
         // Login the customer
         Auth::guard('customer')->login($customer, $this->remember);
 
-        // Update last login time
-        $customer->update(['last_login_at' => now()]);
-
         // Close modal and redirect
         $this->dispatch('close-modal', name: 'signin-modal');
 

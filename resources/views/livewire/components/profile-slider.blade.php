@@ -1,4 +1,4 @@
-<div x-data="urlHashChangeEvent('#profile', 'profileSlider')" class="relative z-50 w-auto h-auto">
+<div wire:ignore.self x-data="urlHashChangeEvent('#profile', 'profileSlider')" class="relative z-50 w-auto h-auto">
 
     <template x-teleport="body">
         <div x-show="$store.profileSlider.slideOverOpen" @keydown.window.escape="$store.profileSlider.slideOverOpen=false"
@@ -20,8 +20,15 @@
                                 class="flex overflow-y-scroll flex-col py-5 h-full bg-white border-l shadow-lg border-neutral-100/70">
                                 <div class="px-4 sm:px-5">
                                     <div class="flex justify-between items-start pb-1">
-                                        <h2 class="text-base font-semibold leading-6 text-gray-900"
-                                            id="slide-over-title">Profile</h2>
+                                        <div>
+                                            <h2 class="text-base font-semibold leading-6 text-gray-900"
+                                                id="slide-over-title">Profile</h2>
+                                            @if($customer)
+                                                <p class="text-sm text-gray-600 mt-1">Welcome, {{ $customer->full_name }}</p>
+                                            @else
+                                                <p class="text-sm text-gray-600 mt-1">Please login to view your profile</p>
+                                            @endif
+                                        </div>
                                         <div class="flex items-center ml-3 h-auto translate-y-1">
                                             <button @click="$store.profileSlider.slideOverOpen=false"
                                                 class="flex absolute right-0 z-30 justify-center items-center px-3 py-2 mt-4 mr-5 space-x-1 text-xs font-medium uppercase rounded-md border border-neutral-200 text-neutral-600 hover:bg-neutral-100">
@@ -41,6 +48,17 @@
                                         <div
                                             class="overflow-hidden relative h-full rounded-md border border-dashed border-neutral-300">
 
+                                            @if(!$customer)
+                                                <div class="flex flex-col items-center justify-center h-full p-8 text-center">
+                                                    <flux:icon.user-circle class="size-16 text-gray-400 mb-4" />
+                                                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Please Login</h3>
+                                                    <p class="text-sm text-gray-600 mb-4">You need to login to view and edit your profile</p>
+                                                    <flux:button @click="$store.profileSlider.slideOverOpen=false; $flux.modal('signin-modal').show();" 
+                                                        variant="primary">
+                                                        Sign In
+                                                    </flux:button>
+                                                </div>
+                                            @else
                                             <div x-data="{
                                                 tabSelected: 1,
                                                 tabId: $id('tabs'),
@@ -90,11 +108,18 @@
                                                     <div :id="$id(tabId + '-content')" x-show="tabContentActive($el)"
                                                         class="relative">
 
-                                                        <div class="space-y-3">
+                                                        <form wire:submit="updatePersonalInfo" class="space-y-3">
+                                                            
+                                                            @if($personalInfoMessage)
+                                                                <div class="p-2 bg-green-50 border border-green-200 rounded-lg">
+                                                                    <p class="text-sm text-green-700">{{ $personalInfoMessage }}</p>
+                                                                </div>
+                                                            @endif
 
                                                             <label class="text-sm font-medium text-gray-700">Full
                                                                 name</label>
-                                                            <flux:input type="text" />
+                                                            <flux:input wire:model="full_name" type="text" 
+                                                                :error="$errors->first('full_name')" />
 
 
                                                             <div class="space-y-1">
@@ -104,9 +129,10 @@
                                                                     <flux:input.group>
                                                                         <flux:input.group.prefix>+88
                                                                         </flux:input.group.prefix>
-                                                                        <flux:input type="tel"
+                                                                        <flux:input wire:model="phone_number" type="tel"
                                                                             placeholder="01XXXXXXXXX" maxlength="11"
-                                                                            name="phone_number" readonly />
+                                                                            name="phone_number" 
+                                                                            :error="$errors->first('phone_number')" />
                                                                     </flux:input.group>
 
                                                                 </div>
@@ -114,81 +140,109 @@
 
                                                             <label
                                                                 class="text-sm font-medium text-gray-700">Email</label>
-                                                            <flux:input type="email" />
+                                                            <flux:input wire:model="email" type="email" 
+                                                                :error="$errors->first('email')" />
 
-                                                            <flux:button variant="primary" color="green"
+                                                            <flux:button type="submit" variant="primary" color="green"
                                                                 class="w-full">
-                                                                Save
+                                                                Save Personal Info
                                                             </flux:button>
 
-                                                        </div>
+                                                        </form>
 
                                                     </div>
 
                                                     <div :id="$id(tabId + '-content')" x-show="tabContentActive($el)"
                                                         class="relative" x-cloak>
 
-                                                        <div class="space-y-3">
+                                                        <form wire:submit="updateAddress" class="space-y-3">
+                                                            
+                                                            @if($addressMessage)
+                                                                <div class="p-2 bg-green-50 border border-green-200 rounded-lg">
+                                                                    <p class="text-sm text-green-700">{{ $addressMessage }}</p>
+                                                                </div>
+                                                            @endif
 
                                                             <label
                                                                 class="text-sm font-medium text-gray-700">City</label>
-                                                            <flux:input type="text" />
+                                                            <flux:input wire:model="city" type="text" 
+                                                                :error="$errors->first('city')" />
 
                                                             <label
                                                                 class="text-sm font-medium text-gray-700">Upazila</label>
-                                                            <flux:input type="text" />
+                                                            <flux:input wire:model="upazila" type="text" 
+                                                                :error="$errors->first('upazila')" />
 
                                                             <label
                                                                 class="text-sm font-medium text-gray-700">Thana</label>
-                                                            <flux:input type="text" />
+                                                            <flux:input wire:model="thana" type="text" 
+                                                                :error="$errors->first('thana')" />
 
                                                             <label class="text-sm font-medium text-gray-700">Post
                                                                 Code</label>
-                                                            <flux:input type="text" />
+                                                            <flux:input wire:model="post_code" type="text" 
+                                                                :error="$errors->first('post_code')" />
 
                                                             <label class="text-sm font-medium text-gray-700">Delivery
                                                                 full Address</label>
-                                                            <flux:input type="text" />
+                                                            <flux:textarea wire:model="address" rows="3"
+                                                                :error="$errors->first('address')" />
 
-                                                            <flux:button variant="primary" color="green"
+                                                            <flux:button type="submit" variant="primary" color="green"
                                                                 class="w-full">
-                                                                Save
+                                                                Save Address
                                                             </flux:button>
 
-                                                        </div>
+                                                        </form>
 
                                                     </div>
 
                                                     <div :id="$id(tabId + '-content')" x-show="tabContentActive($el)"
                                                         class="relative" x-cloak>
 
-                                                        <div class="space-y-3">
+                                                        <form wire:submit="updatePassword" class="space-y-3">
+                                                            
+                                                            @if($passwordMessage)
+                                                                <div class="p-2 bg-green-50 border border-green-200 rounded-lg">
+                                                                    <p class="text-sm text-green-700">{{ $passwordMessage }}</p>
+                                                                </div>
+                                                            @endif
+                                                            
+                                                            @if($passwordError)
+                                                                <div class="p-2 bg-red-50 border border-red-200 rounded-lg">
+                                                                    <p class="text-sm text-red-700">{{ $passwordError }}</p>
+                                                                </div>
+                                                            @endif
 
                                                             <!-- Old Password -->
-                                                            <flux:input label="Old Password" type="password"
-                                                                placeholder="Old password" viewable />
+                                                            <flux:input wire:model="current_password" label="Current Password" type="password"
+                                                                placeholder="Enter current password" viewable 
+                                                                :error="$errors->first('current_password')" />
 
                                                             <!-- New Password -->
-                                                            <flux:input label="New Password" type="password"
-                                                                placeholder="New password" viewable />
+                                                            <flux:input wire:model="new_password" label="New Password" type="password"
+                                                                placeholder="Enter new password" viewable 
+                                                                :error="$errors->first('new_password')" />
 
                                                             <!-- Confirm Password -->
-                                                            <flux:input label="Confirm Password" type="password"
-                                                                placeholder="Confirm your password" viewable />
+                                                            <flux:input wire:model="new_password_confirmation" label="Confirm New Password" type="password"
+                                                                placeholder="Confirm new password" viewable 
+                                                                :error="$errors->first('new_password_confirmation')" />
 
                                                             <!-- Submit -->
-                                                            <flux:button variant="primary" color="green"
+                                                            <flux:button type="submit" variant="primary" color="green"
                                                                 class="w-full">
-                                                                Save
+                                                                Change Password
                                                             </flux:button>
 
 
-                                                        </div>
+                                                        </form>
 
                                                     </div>
 
                                                 </div>
                                             </div>
+                                            @endif
 
                                         </div>
                                     </div>
