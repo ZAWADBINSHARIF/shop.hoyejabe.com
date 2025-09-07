@@ -6,7 +6,8 @@
         "dev": "vite",
         "php": "php artisan",
         "start": "php artisan serve --port=4000",
-        "open": "php artisan serve --host=0.0.0.0 --port=4000"
+        "open": "php artisan serve --host=0.0.0.0 --port=4000",
+        "log": "tail -f storage/logs/laravel.log"
     },
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.16",

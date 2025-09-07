@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebFetch(domain:console.smsq.global)"
     ],
     "deny": [],
     "ask": []
