@@ -396,12 +396,11 @@
                         <!-- Comment Textarea -->
                         <flux:textarea wire:model="newComment" label="Your Comment"
                             placeholder="Share your experience with this product..." rows="4" />
-                        <flux:error name="newComment" />
 
                         <!-- Submit Button -->
                         <div class="flex justify-end">
-                            <flux:button type="submit" variant="primary" class="hover:cursor-pointer">
-                                <flux:icon.chat-bubble-left-right class="size-5" />
+                            <flux:button icon="chat-bubble-left-right" type="submit" variant="primary"
+                                class="hover:cursor-pointer">
                                 Post Comment
                             </flux:button>
                         </div>
