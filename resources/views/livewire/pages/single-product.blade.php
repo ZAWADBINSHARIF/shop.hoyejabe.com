@@ -291,45 +291,143 @@
     <div class="py-10 mt-12">
         <div class="container mx-auto px-4 max-w-4xl">
             <!-- Title -->
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Comments</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Customer Reviews & Comments</h2>
 
-            <!-- Example Reviews -->
+            <!-- Success Message -->
+            @if (session()->has('comment_message'))
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div class="flex items-center">
+                        <flux:icon.check-circle class="size-5 text-green-600 mr-2" />
+                        <p class="text-green-800">{{ session('comment_message') }}</p>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Comments List -->
             <div class="space-y-6 mb-8">
-                <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                    <div class="flex items-center justify-between mb-2">
-                        <h4 class="font-semibold text-gray-800">John Doe</h4>
-                        <span class="text-xs text-gray-500">2 days ago</span>
+                @forelse($comments as $comment)
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-semibold text-gray-800">{{ $comment->customer_display_name }}</h4>
+                                    @if ($comment->is_verified_purchase)
+                                        <flux:badge variant="subtle" color="green" size="sm">
+                                            <flux:icon.check-badge class="size-3" />
+                                            Verified Purchase
+                                        </flux:badge>
+                                    @endif
+                                </div>
+                                @if ($comment->rating)
+                                    <div class="flex items-center gap-1 mt-1">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $comment->rating)
+                                                <flux:icon.star variant="solid" class="size-4 text-yellow-500" />
+                                            @else
+                                                <flux:icon.star variant="outline" class="size-4 text-gray-300" />
+                                            @endif
+                                        @endfor
+                                        <span class="text-sm text-gray-600 ml-1">({{ $comment->rating }}/5)</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                        </div>
+                        <p class="text-gray-700 text-sm leading-relaxed">
+                            {{ $comment->comment }}
+                        </p>
                     </div>
-                    <p class="text-gray-700 text-sm leading-relaxed">
-                        Great product! Quality is amazing and delivery was fast.
-                    </p>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                    <div class="flex items-center justify-between mb-2">
-                        <h4 class="font-semibold text-gray-800">Jane Smith</h4>
-                        <span class="text-xs text-gray-500">1 week ago</span>
+                @empty
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+                        <p class="text-gray-500">No reviews yet. Be the first to share your thoughts!</p>
                     </div>
-                    <p class="text-gray-700 text-sm leading-relaxed">
-                        Product is good but packaging could be improved.
-                    </p>
-                </div>
+                @endforelse
             </div>
 
             <!-- Add Comment Form -->
             <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Add a Comment</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Write a Review</h3>
 
-                <form class="space-y-4">
+                @auth('customer')
+                    <form wire:submit.prevent="submitComment" class="space-y-4">
+                        <!-- Rating Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+                            <div class="flex items-center gap-2">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <button type="button" wire:click="$set('newRating', {{ $i }})"
+                                        class="focus:outline-none">
+                                        @if ($i <= $newRating)
+                                            <flux:icon.star variant="solid"
+                                                class="size-6 text-yellow-500 hover:scale-110 transition-transform" />
+                                        @else
+                                            <flux:icon.star variant="outline"
+                                                class="size-6 text-gray-300 hover:text-yellow-500 hover:scale-110 transition-transform" />
+                                        @endif
+                                    </button>
+                                @endfor
+                                <span class="text-sm text-gray-600 ml-2">
+                                    @switch($newRating)
+                                        @case(1)
+                                            Poor
+                                        @break
 
-                    <flux:textarea label="Your Comment" placeholder="Write something..." />
+                                        @case(2)
+                                            Fair
+                                        @break
 
-                    <div class="flex justify-end">
-                        <flux:button variant="primary" class="hover:cursor-pointer">
-                            Post Comment
-                        </flux:button>
+                                        @case(3)
+                                            Good
+                                        @break
+
+                                        @case(4)
+                                            Very Good
+                                        @break
+
+                                        @case(5)
+                                            Excellent
+                                        @break
+                                    @endswitch
+                                </span>
+                            </div>
+                            <flux:error name="newRating" />
+                        </div>
+
+                        <!-- Comment Textarea -->
+                        <flux:textarea wire:model="newComment" label="Your Comment"
+                            placeholder="Share your experience with this product..." rows="4" />
+                        <flux:error name="newComment" />
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-end">
+                            <flux:button type="submit" variant="primary" class="hover:cursor-pointer">
+                                <flux:icon.chat-bubble-left-right class="size-5" />
+                                Post Comment
+                            </flux:button>
+                        </div>
+                    </form>
+                @else
+                    <!-- Sign In Prompt -->
+                    <div class="text-center py-4">
+                        <p class="text-gray-600 mb-4">Please sign in to write a review</p>
+                        <flux:modal.trigger name="signin-modal">
+                            <flux:button variant="primary" class="hover:cursor-pointer">
+                                <flux:icon.user class="size-5" />
+                                Sign In to Comment
+                            </flux:button>
+                        </flux:modal.trigger>
                     </div>
-                </form>
+                @endauth
+
+                <!-- Auth Error Message -->
+                @error('auth')
+                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div class="flex items-center">
+                            <flux:icon.exclamation-triangle class="size-5 text-yellow-600 mr-2" />
+                            <p class="text-yellow-800">{{ $message }}</p>
+                        </div>
+                    </div>
+                @enderror
             </div>
         </div>
     </div>

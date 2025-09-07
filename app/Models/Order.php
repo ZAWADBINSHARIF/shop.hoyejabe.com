@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
+        'customer_id',
         'customer_name',
         'customer_mobile',
         'address',
@@ -47,5 +48,21 @@ class Order extends Model
     public function orderedProducts()
     {
         return $this->hasMany(OrderedProduct::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function recalculateTotalPrice()
+    {
+        $productsTotal = $this->orderedProducts()->sum('product_total_price');
+
+        $this->total_price = $productsTotal +
+            $this->shipping_cost +
+            $this->extra_shipping_cost;
+
+        $this->saveQuietly();
     }
 }

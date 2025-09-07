@@ -29,4 +29,24 @@ class OrderedProduct extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    protected static function booted()
+    {
+        static::saving(function (OrderedProduct $orderedProduct) {
+            $orderedProduct->product_total_price =
+                ($orderedProduct->base_price +
+                    $orderedProduct->color_extra_price +
+                    $orderedProduct->size_extra_price +
+                    $orderedProduct->extra_shipping_cost) *
+                $orderedProduct->quantity;
+        });
+
+        static::saved(function (OrderedProduct $orderedProduct) {
+            $orderedProduct->order->recalculateTotalPrice();
+        });
+
+        static::deleted(function (OrderedProduct $orderedProduct) {
+            $orderedProduct->order->recalculateTotalPrice();
+        });
+    }
 }

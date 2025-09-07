@@ -82,4 +82,24 @@ class Product extends Model
     {
         return $this->hasMany(OrderedProduct::class);
     }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(ProductComment::class);
+    }
+
+    public function publishedComments(): HasMany
+    {
+        return $this->hasMany(ProductComment::class)->published()->latest();
+    }
+
+    public function averageRating()
+    {
+        return $this->comments()->published()->withRating()->avg('rating');
+    }
+
+    public function totalComments()
+    {
+        return $this->comments()->published()->count();
+    }
 }

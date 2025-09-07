@@ -50,6 +50,40 @@ class OrderResource extends Resource
                         ->visibleOn('edit')
                         ->maxLength(TextLength::LONG->value),
 
+                    Select::make('customer_id')
+                        ->label('Customer')
+                        ->relationship('customer', 'full_name')
+                        ->searchable()
+                        ->preload()
+                        ->nullable()
+                        ->createOptionForm([
+                            TextInput::make('full_name')
+                                ->required()
+                                ->maxLength(TextLength::LONG->value),
+                            TextInput::make('phone_number')
+                                ->required()
+                                ->tel()
+                                ->maxLength(TextLength::PHONE->value),
+                            TextInput::make('email')
+                                ->email()
+                                ->maxLength(TextLength::LONG->value),
+                        ])
+                        ->afterStateUpdated(function ($state, Set $set) {
+                            if ($state) {
+                                $customer = \App\Models\Customer::find($state);
+                                if ($customer) {
+                                    $set('customer_name', $customer->full_name);
+                                    $set('customer_mobile', $customer->phone_number);
+                                    $set('city', $customer->city);
+                                    $set('address', $customer->delivery_address);
+                                    $set('upazila', $customer->upazila);
+                                    $set('thana', $customer->thana);
+                                    $set('post_code', $customer->post_code);
+                                }
+                            }
+                        })
+                        ->live(),
+
                     TextInput::make('customer_name')
                         ->required()
                         ->maxLength(TextLength::LONG->value),
@@ -115,7 +149,9 @@ class OrderResource extends Resource
                     TextInput::make('total_price')
                         ->numeric()
                         ->required()
-                        ->prefix('৳'),
+                        ->readOnly()
+                        ->prefix('৳')
+                        ->helperText('Automatically calculated from ordered products and shipping costs'),
 
                     Select::make('order_status')
                         ->required()
@@ -130,6 +166,12 @@ class OrderResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('order_tracking_id'),
+
+                TextColumn::make('customer.full_name')
+                    ->label('Customer')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('customer_name')->searchable()->sortable(),
                 TextColumn::make('customer_mobile')->searchable(),
@@ -187,9 +229,8 @@ class OrderResource extends Resource
     {
         return [
             'index' => Pages\ListOrders::route('/'),
-            // 'create' => Pages\CreateOrder::route('/create'),
+            'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
-            // 'view' => Pages\ViewOrder::route('/{record}'),
         ];
     }
 }

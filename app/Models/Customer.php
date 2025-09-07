@@ -56,4 +56,22 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * Get the comments for the customer.
+     */
+    public function comments()
+    {
+        return $this->hasMany(ProductComment::class);
+    }
+
+    /**
+     * Get the number of orders for the customer.
+     *
+     * @return int
+     */
+    public function getOrdersCountAttribute()
+    {
+        return $this->orders()->count();
+    }
 }

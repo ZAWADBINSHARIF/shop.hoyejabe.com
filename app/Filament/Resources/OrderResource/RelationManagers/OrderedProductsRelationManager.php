@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductSize;
 use Filament\Forms;
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -60,6 +59,7 @@ class OrderedProductsRelationManager extends RelationManager
                     ->required(),
 
                 Select::make('selected_color_code')
+                    ->label('Color')
                     ->reactive()
                     ->options(function (Get $get) {
                         $productId = $get('product_id');
@@ -69,9 +69,20 @@ class OrderedProductsRelationManager extends RelationManager
                         }
 
                         return ProductColor::where('product_id', $productId)
-                            ->pluck('color_code', 'color_code');
+                            ->pluck('color_code', 'color_code')
+                            ->mapWithKeys(fn($color) => [
+                                $color => "
+                    <div style='display:flex;align-items:center;gap:8px;'>
+                        <span style='display:inline-block;width:16px;height:16px;background:{$color};border:1px solid #ccc;border-radius:4px;'></span>
+                        <span>{$color}</span>
+                    </div>
+                "
+                            ])
+                            ->toArray();
                     })
                     ->native(false)
+                    ->searchable()
+                    ->allowHtml()
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         $productId = $get('product_id');
                         $selected_color_code = $get('selected_color_code');
@@ -86,7 +97,13 @@ class OrderedProductsRelationManager extends RelationManager
                             $set('color_extra_price', $productColorDetail->extra_price ?? 0);
                         }
                     })
-                    ->nullable(),
+                    ->required(function (Get $get) {
+                        $productId = $get('product_id');
+                        if (!$productId) {
+                            return false;
+                        }
+                        return ProductColor::where('product_id', $productId)->exists();
+                    }),
 
                 TextInput::make('color_extra_price')
                     ->numeric()
@@ -129,7 +146,13 @@ class OrderedProductsRelationManager extends RelationManager
                             $set('size_extra_price', $productSizeDetails->extra_price ?? 0);
                         }
                     })
-                    ->nullable(),
+                    ->required(function (Get $get) {
+                        $productId = $get('product_id');
+                        if (!$productId) {
+                            return false;
+                        }
+                        return ProductSize::where('product_id', $productId)->exists();
+                    }),
 
                 TextInput::make('size_extra_price')
                     ->numeric()
@@ -197,11 +220,25 @@ class OrderedProductsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                // Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->after(function ($record, $livewire) {
+                        $record->order->recalculateTotalPrice();
+                        $livewire->dispatch('refreshPage');
+                    }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function ($record, $livewire) {
+                        $record->order->recalculateTotalPrice();
+                        $livewire->dispatch('refreshPage');
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function ($record, $livewire) {
+                        if ($record->order) {
+                            $record->order->recalculateTotalPrice();
+                        }
+                        $livewire->dispatch('refreshPage');
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -6,8 +6,10 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\OrderedProduct;
 use App\Models\Product;
+use App\Models\ProductComment;
 use App\Models\ShippingCost;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class SingleProduct extends Component
 {
@@ -15,6 +17,9 @@ class SingleProduct extends Component
     public $product;
     public $shippingCost;
     public $orderTrackingID = null;
+    public $comments;
+    public $newComment = '';
+    public $newRating = 5;
 
     public $order = [
         'customer_name' => '',
@@ -52,7 +57,7 @@ class SingleProduct extends Component
 
     public function placeOrder()
     {
-        $validator = $this->validate([
+        $this->validate([
             'order.customer_name' => 'required|string|max:255',
             'order.customer_mobile' => 'required|string|max:20',
             'order.address' => 'required|string|max:255',
@@ -106,11 +111,64 @@ class SingleProduct extends Component
         $this->dispatch('order-placed-succefull');
     }
 
+    public function submitComment()
+    {
+        if (!Auth::guard('customer')->check()) {
+            $this->dispatch('open-signin-modal');
+            $this->addError('auth', 'Please sign in to post a comment.');
+            return;
+        }
+
+        $this->validate([
+            'newComment' => 'required|string|min:10|max:500',
+            'newRating' => 'required|integer|min:1|max:5',
+        ], [
+            'newComment.required' => 'Please write a comment.',
+            'newComment.min' => 'Comment must be at least 10 characters.',
+            'newComment.max' => 'Comment must not exceed 500 characters.',
+            'newRating.required' => 'Please provide a rating.',
+        ]);
+
+        $customer = Auth::guard('customer')->user();
+        
+        $hasOrdered = OrderedProduct::whereHas('order', function ($query) use ($customer) {
+            $query->where('customer_mobile', $customer->phone_number);
+        })->where('product_id', $this->product->id)->exists();
+
+        ProductComment::create([
+            'product_id' => $this->product->id,
+            'customer_id' => $customer->id,
+            'comment' => $this->newComment,
+            'rating' => $this->newRating,
+            'is_verified_purchase' => $hasOrdered,
+            'customer_name' => $customer->full_name,
+            'is_approved' => false,
+            'is_visible' => true,
+        ]);
+
+        $this->newComment = '';
+        $this->newRating = 5;
+        
+        $this->loadComments();
+        
+        session()->flash('comment_message', 'Your comment has been submitted and is awaiting approval.');
+    }
+
+    public function loadComments()
+    {
+        $this->comments = ProductComment::with('customer')
+            ->where('product_id', $this->product->id)
+            ->published()
+            ->latest()
+            ->get();
+    }
+
     public function mount(string $product_slug)
     {
         $this->slug = $product_slug;
         $this->product = Product::publishedProducts()->with('colors', 'sizes.size')->where('slug', $this->slug)->firstOrFail();
         $this->shippingCost = ShippingCost::all();
+        $this->loadComments();
     }
 
     public function render()
