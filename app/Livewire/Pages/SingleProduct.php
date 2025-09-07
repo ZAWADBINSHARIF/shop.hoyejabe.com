@@ -130,27 +130,22 @@ class SingleProduct extends Component
         ]);
 
         $customer = Auth::guard('customer')->user();
-        
-        $hasOrdered = OrderedProduct::whereHas('order', function ($query) use ($customer) {
-            $query->where('customer_mobile', $customer->phone_number);
-        })->where('product_id', $this->product->id)->exists();
 
+        // The is_verified_purchase will be automatically set by the model's booted method
         ProductComment::create([
             'product_id' => $this->product->id,
             'customer_id' => $customer->id,
             'comment' => $this->newComment,
             'rating' => $this->newRating,
-            'is_verified_purchase' => $hasOrdered,
             'customer_name' => $customer->full_name,
-            'is_approved' => false,
-            'is_visible' => true,
+            // is_verified_purchase is automatically set in the model
         ]);
 
         $this->newComment = '';
         $this->newRating = 5;
-        
+
         $this->loadComments();
-        
+
         session()->flash('comment_message', 'Your comment has been submitted and is awaiting approval.');
     }
 

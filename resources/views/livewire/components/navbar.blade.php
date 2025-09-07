@@ -53,19 +53,28 @@
             </div>
 
             <!-- Auth Buttons -->
-            <flux:modal.trigger name="signin-modal">
-                <flux:button class="hover:cursor-pointer" variant="outline">Sign In</flux:button>
-            </flux:modal.trigger>
-            <flux:modal.trigger name="signup-modal">
-                <flux:button class="hover:cursor-pointer" variant="primary">Sign Up</flux:button>
-            </flux:modal.trigger>
+            @if (!$customer)
+                <flux:modal.trigger name="signin-modal">
+                    <flux:button class="hover:cursor-pointer" variant="outline">Sign
+                        In</flux:button>
+                </flux:modal.trigger>
+                <flux:modal.trigger name="signup-modal">
+                    <flux:button class="hover:cursor-pointer" variant="primary">Sign
+                        Up</flux:button>
+                </flux:modal.trigger>
+            @else
+                <a href="/my-order">
+                    <flux:button class="hover:cursor-pointer">My Order</flux:button>
+                </a>
 
+                <flux:avatar @click="$store.profileSlider.slideOverOpen=true" icon="user"
+                    class="bg-accent text-white" />
 
-            <a href="/my-order">
-                <flux:button class="hover:cursor-pointer">My Order</flux:button>
-            </a>
-
-            <flux:avatar @click="$store.profileSlider.slideOverOpen=true" icon="user" class="bg-accent text-white" />
+                <flux:button wire:click="$set('showLogoutConfirmation', true)" variant="danger"
+                    class="hover:cursor-pointer flex flex-col justify-center">
+                    Logout
+                </flux:button>
+            @endif
 
         </div>
 
@@ -84,8 +93,10 @@
                 </flux:badge>
             </div>
 
-            <flux:avatar @click="$store.profileSlider.slideOverOpen=true" icon="user" size="sm"
-                class="bg-accent text-white" />
+            @if ($customer)
+                <flux:avatar @click="$store.profileSlider.slideOverOpen=true" icon="user" size="sm"
+                    class="bg-accent text-white" />
+            @endif
 
 
 
@@ -128,17 +139,49 @@
                 </a>
             @endif
 
-            <flux:modal.trigger name="signin-modal">
-                <flux:button variant="outline" class="w-full">Sign In</flux:button>
-            </flux:modal.trigger>
-            <flux:modal.trigger name="signup-modal">
-                <flux:button variant="primary" class="w-full">Sign Up</flux:button>
-            </flux:modal.trigger>
-
-            <a href="/my-order">
-                <flux:button variant="primary" class="w-full hover:cursor-pointer">My Order</flux:button>
-            </a>
+            @if (!$customer)
+                <flux:modal.trigger name="signin-modal">
+                    <flux:button variant="outline" class="w-full">Sign In
+                    </flux:button>
+                </flux:modal.trigger>
+                <flux:modal.trigger name="signup-modal">
+                    <flux:button variant="primary" class="w-full">Sign Up
+                    </flux:button>
+                </flux:modal.trigger>
+            @else
+                <a href="/my-order">
+                    <flux:button variant="primary" class="w-full hover:cursor-pointer">My Order</flux:button>
+                </a>
+                <flux:button wire:click="$set('showLogoutConfirmation', true)" variant="danger"
+                    class="hover:cursor-pointer flex flex-col justify-center">
+                    Logout
+                </flux:button>
+            @endif
         </div>
     </div>
+
+    <!-- Logout Confirmation Modal -->
+    <flux:modal name="logout-confirmation" class="max-w-md" wire:model="showLogoutConfirmation">
+        <div class="space-y-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-red-100 rounded-full">
+                    <flux:icon.arrow-right-start-on-rectangle class="size-6 text-red-600" />
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Confirm Logout</h3>
+                    <p class="text-sm text-gray-600">Are you sure you want to logout?</p>
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-end pt-2">
+                <flux:button variant="ghost" wire:click="$set('showLogoutConfirmation', false)">
+                    Cancel
+                </flux:button>
+                <flux:button variant="danger" wire:click="logout">
+                    Yes, Logout
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
 
 </nav>
