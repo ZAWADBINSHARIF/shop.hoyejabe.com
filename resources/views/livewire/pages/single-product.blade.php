@@ -35,10 +35,17 @@
                 <!-- Title -->
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ $product->name }}</h1>
 
-                <div class="flex justify-end gap-5">
+                <div class="flex justify-end items-center gap-5">
                     <flux:icon.share variant="outline" class="size-6 text-slate-500 hover:cursor-pointer" />
-                    <flux:icon.heart wire:click="toggleFavorite" variant="{{ $isFavorited ? 'solid' : 'outline' }}"
-                        class="size-6 {{ $isFavorited ? 'text-red-500' : 'text-slate-500' }} hover:cursor-pointer hover:scale-110 transition-transform" />
+                    <div class="flex items-center gap-2">
+                        <flux:icon.heart wire:click="toggleFavorite" variant="{{ $isFavorited ? 'solid' : 'outline' }}"
+                            class="size-6 {{ $isFavorited ? 'text-red-500' : 'text-slate-500' }} hover:cursor-pointer hover:scale-110 transition-transform" />
+                        <span class="text-sm text-gray-600">
+                            @if($favoriteCount > 0)
+                                {{ $favoriteCount }}
+                            @endif
+                        </span>
+                    </div>
                 </div>
             </div>
 

@@ -22,6 +22,7 @@ class SingleProduct extends Component
     public $newComment = '';
     public $newRating = 5;
     public $isFavorited = false;
+    public $favoriteCount = 0;
 
     public $order = [
         'customer_id' => null,
@@ -180,6 +181,7 @@ class SingleProduct extends Component
         $this->shippingCost = ShippingCost::all();
         $this->loadComments();
         $this->checkFavoriteStatus();
+        $this->loadFavoriteCount();
     }
     
     public function checkFavoriteStatus()
@@ -188,6 +190,11 @@ class SingleProduct extends Component
             $customer = Auth::guard('customer')->user();
             $this->isFavorited = CustomerFavorite::isFavorited($customer->id, $this->product->id);
         }
+    }
+    
+    public function loadFavoriteCount()
+    {
+        $this->favoriteCount = $this->product->favorites()->count();
     }
     
     public function toggleFavorite()
@@ -202,6 +209,9 @@ class SingleProduct extends Component
         $isNowFavorited = CustomerFavorite::toggle($customer->id, $this->product->id);
         
         $this->isFavorited = $isNowFavorited;
+        
+        // Update favorite count
+        $this->loadFavoriteCount();
         
         if ($isNowFavorited) {
             $this->dispatch('product-favorited', productId: $this->product->id);

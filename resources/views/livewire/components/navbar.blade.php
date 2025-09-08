@@ -11,7 +11,7 @@
             @else
                 <flux:icon.paw-print class="size-10" />
             @endif
-            <span class="hidden min-[400px]:inline text-lg sm:text-3xl">
+            <span x-show='false' class="hidden min-[400px]:inline text-lg sm:text-3xl">
                 {{ $companyDetails->name ?? 'No Name' }}
             </span>
         </a>

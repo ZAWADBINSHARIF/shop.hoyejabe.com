@@ -70,6 +70,37 @@ class ProductComment extends Model
             ->exists();
     }
 
+    /**
+     * Update the verification status for this comment
+     */
+    public function updateVerificationStatus(): bool
+    {
+        $this->is_verified_purchase = $this->hasCustomerPurchasedProduct();
+        return $this->save();
+    }
+
+    /**
+     * Verify all comments for a specific customer
+     */
+    public static function verifyCustomerComments($customerId): int
+    {
+        $comments = static::where('customer_id', $customerId)->get();
+        $updated = 0;
+
+        foreach ($comments as $comment) {
+            $wasVerified = $comment->is_verified_purchase;
+            $isVerified = $comment->hasCustomerPurchasedProduct();
+            
+            if ($wasVerified !== $isVerified) {
+                $comment->is_verified_purchase = $isVerified;
+                $comment->save();
+                $updated++;
+            }
+        }
+
+        return $updated;
+    }
+
     public function scopeApproved($query)
     {
         return $query->where('is_approved', true);
