@@ -46,11 +46,11 @@
             </div>
 
             <!-- Cart -->
-            <div class="relative cursor-pointer" @click="$store.cartSlider.slideOverOpen = true">
+            {{-- <div class="relative cursor-pointer" @click="$store.cartSlider.slideOverOpen = true">
                 <flux:icon.shopping-cart class="size-6" />
                 <flux:badge variant="solid" size="sm" class="absolute -top-4 -right-3 text-white h-5">88
                 </flux:badge>
-            </div>
+            </div> --}}
 
             <!-- Auth Buttons -->
             @if (!$customer)
@@ -87,11 +87,11 @@
             </div>
 
             <!-- Cart -->
-            <div class="relative cursor-pointer" @click="$store.cartSlider.slideOverOpen = true">
+            {{-- <div class="relative cursor-pointer" @click="$store.cartSlider.slideOverOpen = true">
                 <flux:icon.shopping-cart class="size-6" />
                 <flux:badge variant="solid" size="sm" class="absolute -top-4 -right-3 text-white h-5">88
                 </flux:badge>
-            </div>
+            </div> --}}
 
             @if ($customer)
                 <flux:avatar @click="$store.profileSlider.slideOverOpen=true" icon="user" size="sm"

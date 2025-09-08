@@ -22,7 +22,7 @@ class Order extends Model
         'extra_shipping_cost',
         'total_price',
         'order_status',
-        'order_tracking_id'
+        'order_tracking_id',
     ];
 
     protected $casts = [

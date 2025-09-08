@@ -24,6 +24,7 @@ class SingleProduct extends Component
     public $isFavorited = false;
 
     public $order = [
+        'customer_id' => null,
         'customer_name' => '',
         'customer_mobile' => '',
         'address' => '',
@@ -59,6 +60,14 @@ class SingleProduct extends Component
 
     public function placeOrder()
     {
+        // Check if customer is logged in
+        if (!Auth::guard('customer')->check()) {
+            $this->dispatch('close-modal', name: 'placing-order');
+            $this->dispatch('open-signin-modal');
+            $this->addError('auth', 'Please sign in to place an order.');
+            return;
+        }
+
         $this->validate([
             'order.customer_name' => 'required|string|max:255',
             'order.customer_mobile' => 'required|string|max:20',
@@ -87,16 +96,20 @@ class SingleProduct extends Component
 
         if (!$checkProduct->published || $checkProduct->out_of_stock) {
             $this->addError('placing_order_problem', 'The product is out of stock.');
+            return;
         }
 
         $shippingAreaDetails = ShippingCost::findOrFail($this->order['selected_shipping_area']);
-
 
         if ($shippingAreaDetails) {
             $this->order['shipping_cost'] = (float) $shippingAreaDetails->cost;
         }
 
         $this->order['order_status'] = OrderStatus::Pending->value;
+        
+        // Add customer_id from authenticated customer
+        $customer = Auth::guard('customer')->user();
+        $this->order['customer_id'] = $customer->id;
 
         $newOrder = Order::create($this->order);
 
@@ -197,6 +210,29 @@ class SingleProduct extends Component
             $this->dispatch('product-unfavorited', productId: $this->product->id);
             session()->flash('success', 'Product removed from favorites');
         }
+    }
+
+    public function showOrderModal()
+    {
+        // Check if customer is logged in
+        if (!Auth::guard('customer')->check()) {
+            $this->dispatch('open-signin-modal');
+            session()->flash('error', 'Please sign in to place an order');
+            return;
+        }
+
+        // Pre-fill customer information from logged in customer
+        $customer = Auth::guard('customer')->user();
+        $this->order['customer_name'] = $customer->full_name ?? '';
+        $this->order['customer_mobile'] = $customer->phone_number ?? '';
+        $this->order['address'] = $customer->address ?? '';
+        $this->order['city'] = $customer->city ?? '';
+        $this->order['upazila'] = $customer->upazila ?? '';
+        $this->order['thana'] = $customer->thana ?? '';
+        $this->order['post_code'] = $customer->post_code ?? '';
+
+        // Dispatch event to show modal
+        $this->dispatch('show-order-modal');
     }
 
     public function render()

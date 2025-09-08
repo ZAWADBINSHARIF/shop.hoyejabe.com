@@ -29,8 +29,11 @@
         </nav>
 
         @foreach ($latestProducts as $item)
+            {{-- <div>
+                {{ $item->toggle_discount_price }}
+            </div> --}}
             <x-single-product-card :className="'w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col items-center'" :slug="$item->slug" :name="$item->name" :image="$item->images[0]"
-                :basePrice="$item->base_price" />
+                :basePrice="$item->base_price" :toggle_discount_price="$item->toggle_discount_price" :discountPercentage="$item->discount_percentage" />
         @endforeach
 
 

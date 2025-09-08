@@ -20,7 +20,10 @@ class Product extends Model
         'base_price',
         'extra_shipping_cost',
         'published',
-        'out_of_stock'
+        'out_of_stock',
+        'toggle_discount_price',
+        'without_discount_price',
+        'discount_percentage'
     ];
 
     protected $casts = [
@@ -109,7 +112,7 @@ class Product extends Model
     public function favoritedBy()
     {
         return $this->belongsToMany(Customer::class, 'customer_favorites')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**

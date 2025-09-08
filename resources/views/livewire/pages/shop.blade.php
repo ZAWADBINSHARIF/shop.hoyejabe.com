@@ -60,7 +60,8 @@
             <div class="flex flex-wrap overflow-scroll">
 
                 @foreach ($products as $item)
-                    <x-single-product-card :slug="$item->slug" :name="$item->name" :image="$item->images[0]" :basePrice="$item->base_price" />
+                    <x-single-product-card :toggle-discount-price="$item->toggle_discount_price" :slug="$item->slug" :name="$item->name" :image="$item->images[0]"
+                        :base-price="$item->base_price" :discountPercentage="$item->discount_percentage" />
                 @endforeach
 
                 @if (empty($products->items()))

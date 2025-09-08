@@ -1,4 +1,4 @@
-<section class="bg-white py-10">
+<section class="bg-white py-10" x-on:open-signin-modal.window="$flux.modal('signin-modal').show()">
     <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10">
         <!-- Product Image Gallery -->
         <div x-data="{
@@ -7,10 +7,12 @@
         }" x-init="selectedImage = images[0]">
             <!-- Selected Image -->
             <div class="relative aspect-square overflow-hidden rounded-xl mb-4">
-                <span
-                    class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-md">
-                    -15%
-                </span>
+                @if ($product->toggle_discount_price)
+                    <span
+                        class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-md">
+                        -{{ (int) $product->discount_percentage }}%
+                    </span>
+                @endif
                 <img :src="`/storage/${selectedImage}`" alt="Product Image"
                     class="w-full h-full object-cover transition duration-300" />
             </div>
@@ -35,9 +37,7 @@
 
                 <div class="flex justify-end gap-5">
                     <flux:icon.share variant="outline" class="size-6 text-slate-500 hover:cursor-pointer" />
-                    <flux:icon.heart 
-                        wire:click="toggleFavorite"
-                        variant="{{ $isFavorited ? 'solid' : 'outline' }}" 
+                    <flux:icon.heart wire:click="toggleFavorite" variant="{{ $isFavorited ? 'solid' : 'outline' }}"
                         class="size-6 {{ $isFavorited ? 'text-red-500' : 'text-slate-500' }} hover:cursor-pointer hover:scale-110 transition-transform" />
                 </div>
             </div>
@@ -52,9 +52,8 @@
                 <div class="flex text-xl md:text-2xl font-semibold text-gray-900 gap-1">
 
                     <!-- Old Price -->
-                    <p class="text-gray-500 line-through text-sm"
-                        x-text="(totalProductPrice+totalProductPrice*0.15)+'৳'"></p>
-
+                    <p class="text-gray-500 line-through text-sm" x-show="product.toggle_discount_price"
+                        x-text="(totalProductPrice+totalProductPrice*(product.discount_percentage/100))+'৳'"></p>
                     {{-- Discount Price  --}}
                     <p class="text-gray-900" x-text="totalProductPrice+'৳'"></p>
 
@@ -134,7 +133,7 @@
                         <flux:text color='rose' variant="strong">This product is out of stock</flux:text>
                     @else
                         <flux:button variant="primary" icon="package" class="w-full md:w-auto hover:cursor-pointer"
-                            @click="if (validateSelection()) $flux.modal('placing-order').show()">
+                            @click="if (validateSelection()) $wire.showOrderModal()">
                             Order Now
                         </flux:button>
                     @endif
@@ -148,7 +147,8 @@
 
 
                 <flux:modal name="placing-order" class="md:w-full"
-                    x-on:order-placed.window="$flux.modal('placing-order').close()">
+                    x-on:order-placed.window="$flux.modal('placing-order').close()"
+                    x-on:show-order-modal.window="$flux.modal('placing-order').show()">
                     <div class="space-y-6">
                         <div>
                             <flux:heading size="lg">Place Your Order</flux:heading>

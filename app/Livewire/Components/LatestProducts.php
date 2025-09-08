@@ -20,7 +20,7 @@ class LatestProducts extends Component
     {
         $this->latestProducts = Product::publishedProducts()->latest()->take($this->totalShownProducts)->get();
     }
-
+        
     public function render()
     {
         return view('livewire.components.latest-products');

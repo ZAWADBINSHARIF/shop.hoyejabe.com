@@ -137,11 +137,13 @@ class ProductResource extends Resource
                             })
                             ->prefix('৳'),
 
+
                         TextInput::make('discount_percentage')
                             ->numeric()
                             ->afterStateUpdated(function (?string $state, ?string $old, Get $get, Set $set) {
                                 $set('without_discount_price', $get('base_price') + $get('base_price') * ($state / 100));
                             })
+                            ->live()
                             ->suffix('%'),
 
                         TextInput::make('without_discount_price')
@@ -153,7 +155,11 @@ class ProductResource extends Resource
                             ->numeric()
                             ->default(0)
                             ->prefix('৳'),
+
+                        Toggle::make('toggle_discount_price')
+                            ->hint('Turn on and off for calculating and showing the discount'),
                     ])->columns(2),
+
 
                 Section::make("Add Sizes and colors")
                     ->schema([
