@@ -8,6 +8,7 @@ use App\Livewire\Pages\MyOrder;
 use App\Livewire\Pages\Shop;
 use App\Livewire\Pages\SingleProduct;
 use App\Livewire\Pages\TrackOrder;
+use App\Http\Controllers\InvoiceController;
 
 Route::get('/', Home::class)->name("home");
 Route::get('/shop', Shop::class)->name("shop");
@@ -17,3 +18,7 @@ Route::get('/contact-us', ContactUs::class)->name("contact-us");
 Route::get('/product', SingleProduct::class)->name("product");
 Route::get('/track-order', TrackOrder::class)->name("track-order");
 Route::get('/my-order', MyOrder::class)->name("my-order");
+
+// Invoice routes
+Route::get('/invoice/{order}/download', [InvoiceController::class, 'download'])->name('invoice.download');
+Route::get('/invoice/{order}/view', [InvoiceController::class, 'view'])->name('invoice.view');

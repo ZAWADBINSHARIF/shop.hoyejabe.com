@@ -2,8 +2,8 @@
     <div class="container mx-auto px-4 max-w-5xl">
         <h2 class="text-2xl font-bold text-gray-800 mb-8">My Orders</h2>
 
-        @if ($order)
-            @for ($i = 0; $i < 10; $i++)
+        @if ($orders->count() > 0)
+            @foreach ($orders as $order)
                 <div
                     class="mb-8 rounded-2xl bg-white shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
 
@@ -18,12 +18,14 @@
                         <div class="flex flex-col items-end gap-3">
 
                             {{-- Download Invoice --}}
-                            <flux:button class="hover:cursor-pointer">
-                                <span>
-                                    Download invoice
-                                </span>
-                                <flux:icon icon="arrow-down" class="size-5" />
-                            </flux:button>
+                            <a href="{{ route('invoice.download', $order->id) }}" target="_blank">
+                                <flux:button class="hover:cursor-pointer">
+                                    <span>
+                                        Download invoice
+                                    </span>
+                                    <flux:icon icon="arrow-down" class="size-5" />
+                                </flux:button>
+                            </a>
 
                             <flux:badge variant="solid" color="indigo" class="block">
                                 {{ ucwords((string) $order->order_status->value) ?? 'Processing' }}
@@ -40,7 +42,7 @@
                             <p><strong>Address:</strong> {{ $order->address }}, {{ $order->city }}</p>
                         </div>
                         <div>
-                            <p><strong>Shipping Area:</strong> {{ $order->shipping->title }}</p>
+                            <p><strong>Shipping Area:</strong> {{ $order->shipping ? $order->shipping->title : 'N/A' }}</p>
                             <p><strong>Shipping Cost:</strong> ৳{{ number_format($order->shipping_cost, 2) }}</p>
                             <p><strong>Total:</strong> <span
                                     class="font-bold text-indigo-600">৳{{ number_format($order->total_price, 2) }}</span>
@@ -56,7 +58,12 @@
                         </div>
                     </div>
                 </div>
-            @endfor
+            @endforeach
+            
+            {{-- Pagination --}}
+            <div class="mt-8">
+                {{ $orders->links() }}
+            </div>
         @else
             <div class="text-center py-16 bg-white rounded-xl shadow-md border border-gray-200">
                 <h3 class="text-xl font-semibold text-gray-700">No Orders Found</h3>
