@@ -72,7 +72,7 @@
                                                                     @if ($product->discount_percentage > 0)
                                                                         <span
                                                                             class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                                                            -{{ $product->discount_percentage }}%
+                                                                            -{{ number_format($product->discount_percentage, 0) }}%
                                                                         </span>
                                                                     @endif
                                                                 </div>
@@ -105,7 +105,7 @@
                                                                                 <div class="flex items-center gap-2">
                                                                                     <span
                                                                                         class="text-lg font-bold text-gray-900">
-                                                                                        ৳{{ number_format($product->sale_price, 0) }}
+                                                                                        ৳{{ number_format($product->base_price + $product->base_price * ($product->discount_percentage / 100), 0) }}
                                                                                     </span>
                                                                                     <span
                                                                                         class="text-sm text-gray-400 line-through">
