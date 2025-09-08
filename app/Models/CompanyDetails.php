@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CompanyDetails extends Model
 {
-    protected $fillable = ['name', 'logo', 'about', 'width', 'height'];
+    protected $fillable = ['name', 'logo', 'about', 'width', 'height', 'show_company_name'];
 
 
     public static function booted()

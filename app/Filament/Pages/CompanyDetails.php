@@ -11,6 +11,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -72,7 +73,11 @@ class CompanyDetails extends Page
                                         ->numeric()
                                         ->minValue(0)
                                 ])->columns(2),
-                            TextInput::make('name')->maxLength(TextLength::SHORT->value)->required(),
+                            Section::make()
+                                ->schema([
+                                    Toggle::make('show_company_name'),
+                                    TextInput::make('name')->maxLength(TextLength::SHORT->value)->required(),
+                                ]),
                             BasicEditor::make('about')->maxLength(TextLength::LARGE->value)->required()
                         ])
                 ]
