@@ -165,7 +165,8 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('order_tracking_id'),
+                TextColumn::make('order_tracking_id')
+                    ->copyable(),
 
                 TextColumn::make('customer.full_name')
                     ->label('Customer')

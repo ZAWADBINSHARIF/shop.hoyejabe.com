@@ -9,8 +9,10 @@ use App\Models\Product;
 use App\Models\ProductComment;
 use App\Models\CustomerFavorite;
 use App\Models\ShippingCost;
+use App\Services\SmsService;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SingleProduct extends Component
 {
@@ -71,7 +73,13 @@ class SingleProduct extends Component
 
         $this->validate([
             'order.customer_name' => 'required|string|max:255',
-            'order.customer_mobile' => 'required|string|max:20',
+            'order.customer_mobile' => [
+                'required',
+                'string',
+                'regex:/^(?:\+?88)?01[3-9]\d{8}$/',
+                'min:11',
+                'max:14'
+            ],
             'order.address' => 'required|string|max:255',
             'order.city' => 'required|string|max:255',
             'order.upazila' => 'nullable|string|max:255',
@@ -81,7 +89,10 @@ class SingleProduct extends Component
             'order.extra_shipping_cost' => 'required|numeric',
             'order.total_price' => 'required|numeric',
         ], [
-            'order.selected_shipping_area' => 'Select one of the shipping area'
+            'order.selected_shipping_area' => 'Select one of the shipping area',
+            'order.customer_mobile.regex' => 'Please enter a valid Bangladesh mobile number (e.g., 01712345678)',
+            'order.customer_mobile.min' => 'Mobile number must be at least 11 digits',
+            'order.customer_mobile.max' => 'Mobile number must not exceed 14 digits',
         ], [
             'order.customer_name' => 'customer name',
             'order.customer_mobile' => 'mobile number',
@@ -106,6 +117,17 @@ class SingleProduct extends Component
             $this->order['shipping_cost'] = (float) $shippingAreaDetails->cost;
         }
 
+        // Normalize phone number - ensure it starts with 88
+        $normalizedPhone = $this->order['customer_mobile'];
+        if (!str_starts_with($normalizedPhone, '88')) {
+            if (str_starts_with($normalizedPhone, '+88')) {
+                $normalizedPhone = substr($normalizedPhone, 1); // Remove + sign
+            } else {
+                $normalizedPhone = '88' . $normalizedPhone; // Add 88 prefix
+            }
+        }
+        $this->order['customer_mobile'] = $normalizedPhone;
+        
         $this->order['order_status'] = OrderStatus::Pending->value;
         
         // Add customer_id from authenticated customer
@@ -122,6 +144,24 @@ class SingleProduct extends Component
         $this->orderedProduct['extra_shipping_cost'] = (float) $this->product->extra_shipping_cost;
         $this->orderedProduct['product_total_price'] = $this->productTotalPrice();
         OrderedProduct::create($this->orderedProduct);
+
+        // Send SMS notification to customer
+        try {
+            $smsService = new SmsService();
+            $smsService->sendOrderConfirmation($newOrder);
+            
+            Log::info('Order confirmation SMS sent', [
+                'order_id' => $newOrder->id,
+                'tracking_id' => $newOrder->order_tracking_id,
+                'phone' => $newOrder->customer_mobile
+            ]);
+        } catch (\Exception $e) {
+            // Log the error but don't stop the order process
+            Log::error('Failed to send order confirmation SMS', [
+                'order_id' => $newOrder->id,
+                'error' => $e->getMessage()
+            ]);
+        }
 
         $this->dispatch('order-placed');
         $this->dispatch('order-placed-succefull');

@@ -360,8 +360,15 @@
                         <flux:input badge="Required" label="Full Name" placeholder="Enter your name"
                             wire:model.defer="order.customer_name" />
 
-                        <flux:input badge="Required" label="Phone Number" placeholder="01XXXXXXXXX" type="tel"
+                        <flux:input badge="Required" label="Phone Number" 
+                            placeholder="01XXXXXXXXX" 
+                            type="tel"
+                            pattern="^(?:\+?88)?01[3-9]\d{8}$"
+                            title="Please enter a valid Bangladesh mobile number (e.g., 01712345678 or +8801712345678)"
                             wire:model.defer="order.customer_mobile" />
+                        @error('order.customer_mobile')
+                            <span class="text-xs text-red-600">{{ $message }}</span>
+                        @enderror
 
                         <flux:input badge="Required" label="City" placeholder="Enter your city"
                             wire:model.defer="order.city" />

@@ -17,7 +17,7 @@ class SmsService
      */
     public function sendOrderConfirmation(Order $order): void
     {
-        $message = "Dear {$order->customer_name}, your order #{$order->order_tracking_id} has been confirmed. Total: ৳{$order->total_price}. Thank you for shopping with " . config('app.name');
+        $message = "Dear {$order->customer_name}, your order #{$order->order_tracking_id} has been confirmed. Total: {$order->total_price} BDT. Thank you for shopping with " . config('app.name');
 
         $this->sendSms($order->customer_mobile, $message);
     }
@@ -105,7 +105,7 @@ class SmsService
             }
 
             if ($response->successful()) {
-                
+
                 Log::info('SMS sent successfully', [
                     'phone' => $phoneNumber,
                     'message' => substr($message, 0, 50) . '...'
