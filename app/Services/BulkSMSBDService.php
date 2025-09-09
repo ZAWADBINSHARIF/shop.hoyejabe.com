@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\SmsConfiguration;
 use Illuminate\Support\Facades\Log;
 
 class BulkSMSBDService
@@ -12,9 +13,13 @@ class BulkSMSBDService
 
     public function __construct()
     {
+        // Get SMS configuration from database
+        $config = SmsConfiguration::first();
+        
+        // Use database config if available, otherwise fallback to env config
         $this->apiUrl = config('services.bulksmsbd.endpoint', 'http://bulksmsbd.net/api/smsapi');
-        $this->apiKey = config('services.bulksmsbd.api_key');
-        $this->senderId = config('services.bulksmsbd.sender_id');
+        $this->apiKey = $config?->bulksmsbd_api_key ?? config('services.bulksmsbd.api_key');
+        $this->senderId = $config?->bulksmsbd_sender_id ?? config('services.bulksmsbd.sender_id');
     }
 
     /**

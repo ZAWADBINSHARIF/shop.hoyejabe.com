@@ -4,11 +4,64 @@ namespace App\Services;
 
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\SmsConfiguration;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class SmsService
 {
+    /**
+     * SMSQ API Error Codes
+     * All error codes come under HTTP 200 success response
+     */
+    const ERROR_CODES = [
+        0 => 'Success',
+        1 => 'Invalid API Key',
+        2 => 'Invalid Client ID',
+        3 => 'Invalid Sender ID',
+        4 => 'Invalid Mobile Number',
+        5 => 'Empty Message',
+        6 => 'Invalid Message',
+        7 => 'Insufficient Balance',
+        8 => 'API Disabled',
+        9 => 'Account Suspended',
+        10 => 'Account Expired',
+        11 => 'Invalid Template ID',
+        12 => 'Template Not Approved',
+        13 => 'Invalid Schedule Time',
+        14 => 'Invalid Unicode Parameter',
+        15 => 'Invalid Flash Parameter',
+        16 => 'Rate Limit Exceeded',
+        17 => 'DND Number',
+        18 => 'Blacklisted Number',
+        19 => 'Route Not Available',
+        20 => 'Server Error',
+        99 => 'Unknown Error'
+    ];
+
+    /**
+     * Check if error code indicates authentication issue
+     */
+    protected function isAuthenticationError(int $errorCode): bool
+    {
+        return in_array($errorCode, [1, 2, 3, 8, 9, 10]);
+    }
+
+    /**
+     * Check if error code indicates balance issue
+     */
+    protected function isBalanceError(int $errorCode): bool
+    {
+        return $errorCode === 7;
+    }
+
+    /**
+     * Get human-readable error message
+     */
+    protected function getErrorMessage(int $errorCode): string
+    {
+        return self::ERROR_CODES[$errorCode] ?? 'Unknown error code: ' . $errorCode;
+    }
     /**
      * Send order confirmation SMS
      *
@@ -180,14 +233,22 @@ class SmsService
     public function sendBulkSameMessage(array $phoneNumbers, string $message, array $options = []): array
     {
         try {
+            // Get SMS configuration from database
+            $config = SmsConfiguration::first();
+
+            // Fallback to env config if no database config exists
+            $apiKey = $config?->smsq_api_key ?? config('services.smsq.api_key');
+            $clientId = $config?->smsq_client_id ?? config('services.smsq.client_id');
+            $senderId = $config?->smsq_sender_id ?? config('services.smsq.sender_id');
+
             // Join phone numbers with comma as per SMSQ API
             $mobileNumbers = implode(',', $phoneNumbers);
 
             // Prepare API parameters
             $params = [
-                'ApiKey' => config('services.smsq.api_key'),
-                'ClientId' => config('services.smsq.client_id'),
-                'SenderId' => config('services.smsq.sender_id'),
+                'ApiKey' => $apiKey,
+                'ClientId' => $clientId,
+                'SenderId' => $senderId,
                 'MobileNumbers' => $mobileNumbers,
                 'Message' => $message
             ];
@@ -214,7 +275,6 @@ class SmsService
                 $response = Http::post($endpoint, $params);
             } else {
                 $response = Http::get($endpoint, $params);
-                dd($response->body());
             }
 
             Log::info('Bulk SMS API Response', [
@@ -225,16 +285,39 @@ class SmsService
             if ($response->successful()) {
                 $responseData = $response->json();
 
-                // Check SMSQ specific error codes
-                if (isset($responseData['error_code']) && $responseData['error_code'] != 0) {
-                    Log::error('Bulk SMS API error', [
-                        'error_code' => $responseData['error_code'],
-                        'error' => $responseData['error_description'] ?? 'Unknown error'
-                    ]);
+                // Check SMSQ specific error codes (all come under HTTP 200)
+                $errorCode = $responseData['error_code'] ?? $responseData['ErrorCode'] ?? null;
+                
+                if ($errorCode !== null && $errorCode != 0) {
+                    $errorMessage = $this->getErrorMessage($errorCode);
+                    $errorDescription = $responseData['error_description'] ?? $responseData['ErrorDescription'] ?? $errorMessage;
+                    
+                    // Log different error types with appropriate severity
+                    if ($this->isAuthenticationError($errorCode)) {
+                        Log::critical('SMS Authentication Error', [
+                            'error_code' => $errorCode,
+                            'error' => $errorDescription,
+                            'message' => 'Check SMS Settings in admin panel'
+                        ]);
+                    } elseif ($this->isBalanceError($errorCode)) {
+                        Log::warning('SMS Balance Insufficient', [
+                            'error_code' => $errorCode,
+                            'error' => $errorDescription,
+                            'recipients_count' => count($phoneNumbers)
+                        ]);
+                    } else {
+                        Log::error('Bulk SMS API error', [
+                            'error_code' => $errorCode,
+                            'error' => $errorDescription
+                        ]);
+                    }
 
                     return [
                         'success' => false,
-                        'error' => $responseData['error_description'] ?? 'Failed to send bulk SMS',
+                        'error' => $errorDescription,
+                        'error_code' => $errorCode,
+                        'error_type' => $this->isAuthenticationError($errorCode) ? 'authentication' : 
+                                       ($this->isBalanceError($errorCode) ? 'balance' : 'general'),
                         'sent_count' => 0
                     ];
                 }
@@ -336,13 +419,21 @@ class SmsService
     public function sendSms(string $phoneNumber, string $message, array $options = []): bool
     {
         try {
+            // Get SMS configuration from database
+            $config = SmsConfiguration::first();
+
+            // Fallback to env config if no database config exists
+            $apiKey = $config?->smsq_api_key ?? config('services.smsq.api_key');
+            $clientId = $config?->smsq_client_id ?? config('services.smsq.client_id');
+            $senderId = $config?->smsq_sender_id ?? config('services.smsq.sender_id');
+
             $phoneNumber = $this->formatPhoneNumber($phoneNumber);
             $params = [
-                'ApiKey' => config('services.smsq.api_key'),
-                'ClientId' => config('services.smsq.client_id'),
+                'ApiKey' => $apiKey,
+                'ClientId' => $clientId,
                 'MobileNumbers' => $phoneNumber,
                 'Message' => $message,
-                'SenderId' => $options['sender_id'] ?? config('services.smsq.sender_id'),
+                'SenderId' => $options['sender_id'] ?? $senderId,
                 'Is_Unicode' => $options['is_unicode'] ?? false,
                 'Is_Flash' => $options['is_flash'] ?? false,
                 'SchedTime' => $options['schedule_time'] ?? null,
@@ -354,14 +445,47 @@ class SmsService
                 $response = Http::post(config('services.smsq.endpoint', 'https://console.smsq.global/api/v2/SendSMS'), $params);
             } else {
                 $response = Http::get(config('services.smsq.endpoint', 'https://console.smsq.global/api/v2/SendSMS'), $params);
-                Log::alert($response->body());
             }
 
             if ($response->successful()) {
+                $responseData = $response->json();
+                
+                // Check SMSQ specific error codes (all come under HTTP 200)
+                $errorCode = $responseData['error_code'] ?? $responseData['ErrorCode'] ?? null;
+                
+                if ($errorCode !== null && $errorCode != 0) {
+                    $errorMessage = $this->getErrorMessage($errorCode);
+                    $errorDescription = $responseData['error_description'] ?? $responseData['ErrorDescription'] ?? $errorMessage;
+                    
+                    // Log different error types with appropriate severity
+                    if ($this->isAuthenticationError($errorCode)) {
+                        Log::critical('SMS Authentication Error', [
+                            'error_code' => $errorCode,
+                            'error' => $errorDescription,
+                            'phone' => $phoneNumber,
+                            'message' => 'Check SMS Settings in admin panel'
+                        ]);
+                    } elseif ($this->isBalanceError($errorCode)) {
+                        Log::warning('SMS Balance Insufficient', [
+                            'error_code' => $errorCode,
+                            'error' => $errorDescription,
+                            'phone' => $phoneNumber
+                        ]);
+                    } else {
+                        Log::error('SMS API error', [
+                            'error_code' => $errorCode,
+                            'error' => $errorDescription,
+                            'phone' => $phoneNumber
+                        ]);
+                    }
+                    
+                    return false;
+                }
 
                 Log::info('SMS sent successfully', [
                     'phone' => $phoneNumber,
-                    'message' => substr($message, 0, 50) . '...'
+                    'message' => substr($message, 0, 50) . '...',
+                    'response' => $responseData
                 ]);
                 return true;
             }
@@ -389,19 +513,55 @@ class SmsService
     public function checkSmsStatus(string $messageId): ?array
     {
         try {
+            // Get SMS configuration from database
+            $config = SmsConfiguration::first();
+            
+            // Fallback to env config if no database config exists
+            $apiKey = $config?->smsq_api_key ?? config('services.smsq.api_key');
+            $clientId = $config?->smsq_client_id ?? config('services.smsq.client_id');
+            
             $response = Http::get('https://console.smsq.global/api/v2/MessageStatus', [
-                'ApiKey' => config('services.smsq.api_key'),
-                'ClientId' => config('services.smsq.client_id'),
+                'ApiKey' => $apiKey,
+                'ClientId' => $clientId,
                 'MessageId' => $messageId,
             ]);
 
             if ($response->successful()) {
-                return $response->json();
+                $responseData = $response->json();
+                
+                // Check for error codes in status check
+                $errorCode = $responseData['error_code'] ?? $responseData['ErrorCode'] ?? null;
+                
+                if ($errorCode !== null && $errorCode != 0) {
+                    $errorMessage = $this->getErrorMessage($errorCode);
+                    $errorDescription = $responseData['error_description'] ?? $responseData['ErrorDescription'] ?? $errorMessage;
+                    
+                    Log::error('SMS Status Check Error', [
+                        'messageId' => $messageId,
+                        'error_code' => $errorCode,
+                        'error' => $errorDescription
+                    ]);
+                    
+                    return [
+                        'success' => false,
+                        'error_code' => $errorCode,
+                        'error' => $errorDescription,
+                        'messageId' => $messageId
+                    ];
+                }
+                
+                return $responseData;
             }
 
+            Log::error('Failed to check SMS status - HTTP error', [
+                'messageId' => $messageId,
+                'status' => $response->status(),
+                'response' => $response->body()
+            ]);
+            
             return null;
         } catch (\Exception $e) {
-            Log::error('Failed to check SMS status', [
+            Log::error('Failed to check SMS status - Exception', [
                 'messageId' => $messageId,
                 'error' => $e->getMessage()
             ]);

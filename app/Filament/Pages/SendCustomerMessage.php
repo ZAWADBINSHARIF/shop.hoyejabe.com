@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Customer;
+use App\Models\SmsConfiguration;
 use App\Services\SmsService;
 use App\Services\BulkSMSBDService;
 use Filament\Forms\Form;
@@ -47,17 +48,6 @@ class SendCustomerMessage extends Page
                 Section::make('Message Details')
                     ->description('Send custom SMS messages to one or multiple customers')
                     ->schema([
-                        Radio::make('sms_provider')
-                            ->label('SMS Provider')
-                            ->options([
-                                'smsq' => 'SMSQ (Default)',
-                                'bulksmsbd' => 'BulkSMSBD'
-                            ])
-                            ->default('smsq')
-                            ->required()
-                            ->inline()
-                            ->helperText('Select which SMS gateway to use for sending messages'),
-
                         Toggle::make('select_all')
                             ->label('Send to All Customers')
                             ->helperText('Enable this to send message to all customers with phone numbers')
@@ -156,7 +146,11 @@ class SendCustomerMessage extends Page
         $data = $this->form->getState();
 
         $message = $data['message'];
-        $provider = $data['sms_provider'] ?? 'smsq';
+        
+        // Get the active provider from database configuration
+        $config = SmsConfiguration::first();
+        $provider = $config?->active_provider ?? 'smsq';
+        
         $selectAll = $data['select_all'] ?? false;
         
         // Handle customer selection based on select_all toggle
