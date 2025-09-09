@@ -60,7 +60,7 @@ class CustomerResource extends Resource
                         Forms\Components\TextInput::make('post_code')
                             ->maxLength(255)
                             ->label('Post Code'),
-                        Forms\Components\Textarea::make('delivery_address')
+                        Forms\Components\Textarea::make('address')
                             ->columnSpanFull()
                             ->rows(3)
                             ->label('Delivery Address'),
