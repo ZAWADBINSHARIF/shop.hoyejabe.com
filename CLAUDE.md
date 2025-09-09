@@ -14,6 +14,7 @@ This is a Laravel 12 e-commerce application with Livewire 3, Flux UI components,
 - **Database**: MariaDB/MySQL
 - **Styling**: Tailwind CSS v4
 - **Build Tools**: Vite, NPM/PNPM
+- **SMS Services**: SMSQ and BulkSMSBD integrations
 
 ## Development Commands
 
@@ -103,10 +104,12 @@ resources/
 
 - **Product**: Main product entity with images, categories, sizes, colors
 - **Order**: Customer orders with OrderedProduct pivot
-- **User**: Authentication and user management
+- **Customer**: Customer profiles with phone numbers for SMS
+- **User**: Admin authentication and management
 - **ProductCategory**: Product categorization
 - **ShippingCost**: Shipping configuration
 - **CarouselImage**: Homepage carousel management
+- **OrderedProduct**: Pivot table for order items with quantity and extras
 
 ### Routing
 
@@ -123,22 +126,26 @@ All routes are defined in `routes/web.php` using Livewire full-page components:
 
 Filament admin panel accessible at `/admin` with resources for:
 - Products (with image cropping to 1:1 ratio)
-- Orders
-- Users
+- Orders (with status management and order tracking)
+- Customers (with SMS messaging capabilities)
+- Users (admin accounts)
 - Product Categories
 - Shipping Costs
 - Carousel Images
 - Sizes
+- Send Customer Message (bulk SMS page)
 
-## Current Work in Progress
+## SMS Service Architecture
 
-Based on git status, the following files have uncommitted changes:
-- Product resource admin panel modifications
-- Single product card component
-- Navbar component
-- Profile slider component
-- Track order page
-- My Order page (new feature being added)
+The application has dual SMS gateway support:
+1. **SMSQ** (Primary): Uses comma-separated numbers for bulk sending
+2. **BulkSMSBD** (Alternative): Bangladesh-focused SMS provider
+
+Key SMS features:
+- Optimized bulk sending (single API call for same message to multiple recipients)
+- Message personalization with {name} and {first_name} placeholders
+- Automatic phone number formatting for Bangladesh (+880)
+- Smart message grouping for personalized bulk sends
 
 ## Database Configuration
 
@@ -148,10 +155,26 @@ Based on git status, the following files have uncommitted changes:
 - Cache driver: database
 - Queue driver: database
 
-## Important Notes
+## Environment Configuration
 
-1. Images are automatically cropped to 1:1 aspect ratio when uploading product images
-2. The application uses database for sessions, cache, and queue management
-3. Development server runs on port 4000 by default
-4. Tailwind CSS v4 is configured via Vite plugin
-5. Authentication uses Livewire modals for SignIn/SignUp flows
+Required SMS configuration in `.env`:
+```
+# SMSQ Configuration
+SMSQ_API_KEY=your_api_key
+SMSQ_CLIENT_ID=your_client_id
+SMSQ_SENDER_ID=your_sender_id
+
+# BulkSMSBD Configuration
+BULKSMSBD_API_KEY=your_api_key
+BULKSMSBD_SENDER_ID=your_sender_id
+```
+
+## Important Implementation Details
+
+1. **Image Processing**: Product images automatically cropped to 1:1 aspect ratio on upload
+2. **Session Management**: Uses database driver for sessions, cache, and queue
+3. **Port Configuration**: Development server runs on port 4000 by default
+4. **Frontend Stack**: Tailwind CSS v4 via Vite plugin, Flux UI components with Livewire 3
+5. **Authentication Flow**: Customer auth uses Livewire modals (SignIn/SignUp/ForgotPassword)
+6. **SMS Optimization**: `sendBulkSameMessage()` method reduces API calls from N to 1 for identical messages
+7. **Order Tracking**: Each order has unique `order_tracking_id` for customer tracking
