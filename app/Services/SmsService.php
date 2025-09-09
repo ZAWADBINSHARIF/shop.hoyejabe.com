@@ -234,12 +234,12 @@ class SmsService
     {
         try {
             // Get SMS configuration from database
-            $config = SmsConfiguration::first();
+            $smsConfig = SmsConfiguration::first();
 
             // Fallback to env config if no database config exists
-            $apiKey = $config?->smsq_api_key ?? config('services.smsq.api_key');
-            $clientId = $config?->smsq_client_id ?? config('services.smsq.client_id');
-            $senderId = $config?->smsq_sender_id ?? config('services.smsq.sender_id');
+            $apiKey = $smsConfig?->smsq_api_key ?? config('services.smsq.api_key');
+            $clientId = $smsConfig?->smsq_client_id ?? config('services.smsq.client_id');
+            $senderId = $smsConfig?->smsq_sender_id ?? config('services.smsq.sender_id');
 
             // Join phone numbers with comma as per SMSQ API
             $mobileNumbers = implode(',', $phoneNumbers);
@@ -287,11 +287,11 @@ class SmsService
 
                 // Check SMSQ specific error codes (all come under HTTP 200)
                 $errorCode = $responseData['error_code'] ?? $responseData['ErrorCode'] ?? null;
-                
+
                 if ($errorCode !== null && $errorCode != 0) {
                     $errorMessage = $this->getErrorMessage($errorCode);
                     $errorDescription = $responseData['error_description'] ?? $responseData['ErrorDescription'] ?? $errorMessage;
-                    
+
                     // Log different error types with appropriate severity
                     if ($this->isAuthenticationError($errorCode)) {
                         Log::critical('SMS Authentication Error', [
@@ -316,8 +316,7 @@ class SmsService
                         'success' => false,
                         'error' => $errorDescription,
                         'error_code' => $errorCode,
-                        'error_type' => $this->isAuthenticationError($errorCode) ? 'authentication' : 
-                                       ($this->isBalanceError($errorCode) ? 'balance' : 'general'),
+                        'error_type' => $this->isAuthenticationError($errorCode) ? 'authentication' : ($this->isBalanceError($errorCode) ? 'balance' : 'general'),
                         'sent_count' => 0
                     ];
                 }
@@ -420,12 +419,12 @@ class SmsService
     {
         try {
             // Get SMS configuration from database
-            $config = SmsConfiguration::first();
+            $smsConfig = SmsConfiguration::first();
 
             // Fallback to env config if no database config exists
-            $apiKey = $config?->smsq_api_key ?? config('services.smsq.api_key');
-            $clientId = $config?->smsq_client_id ?? config('services.smsq.client_id');
-            $senderId = $config?->smsq_sender_id ?? config('services.smsq.sender_id');
+            $apiKey = $smsConfig?->smsq_api_key ?? config('services.smsq.api_key');
+            $clientId = $smsConfig?->smsq_client_id ?? config('services.smsq.client_id');
+            $senderId = $smsConfig?->smsq_sender_id ?? config('services.smsq.sender_id');
 
             $phoneNumber = $this->formatPhoneNumber($phoneNumber);
             $params = [
@@ -449,14 +448,14 @@ class SmsService
 
             if ($response->successful()) {
                 $responseData = $response->json();
-                
+
                 // Check SMSQ specific error codes (all come under HTTP 200)
                 $errorCode = $responseData['error_code'] ?? $responseData['ErrorCode'] ?? null;
-                
+
                 if ($errorCode !== null && $errorCode != 0) {
                     $errorMessage = $this->getErrorMessage($errorCode);
                     $errorDescription = $responseData['error_description'] ?? $responseData['ErrorDescription'] ?? $errorMessage;
-                    
+
                     // Log different error types with appropriate severity
                     if ($this->isAuthenticationError($errorCode)) {
                         Log::critical('SMS Authentication Error', [
@@ -478,7 +477,7 @@ class SmsService
                             'phone' => $phoneNumber
                         ]);
                     }
-                    
+
                     return false;
                 }
 
@@ -514,12 +513,12 @@ class SmsService
     {
         try {
             // Get SMS configuration from database
-            $config = SmsConfiguration::first();
-            
+            $smsConfig = SmsConfiguration::first();
+
             // Fallback to env config if no database config exists
-            $apiKey = $config?->smsq_api_key ?? config('services.smsq.api_key');
-            $clientId = $config?->smsq_client_id ?? config('services.smsq.client_id');
-            
+            $apiKey = $smsConfig?->smsq_api_key ?? config('services.smsq.api_key');
+            $clientId = $smsConfig?->smsq_client_id ?? config('services.smsq.client_id');
+
             $response = Http::get('https://console.smsq.global/api/v2/MessageStatus', [
                 'ApiKey' => $apiKey,
                 'ClientId' => $clientId,
@@ -528,20 +527,20 @@ class SmsService
 
             if ($response->successful()) {
                 $responseData = $response->json();
-                
+
                 // Check for error codes in status check
                 $errorCode = $responseData['error_code'] ?? $responseData['ErrorCode'] ?? null;
-                
+
                 if ($errorCode !== null && $errorCode != 0) {
                     $errorMessage = $this->getErrorMessage($errorCode);
                     $errorDescription = $responseData['error_description'] ?? $responseData['ErrorDescription'] ?? $errorMessage;
-                    
+
                     Log::error('SMS Status Check Error', [
                         'messageId' => $messageId,
                         'error_code' => $errorCode,
                         'error' => $errorDescription
                     ]);
-                    
+
                     return [
                         'success' => false,
                         'error_code' => $errorCode,
@@ -549,7 +548,7 @@ class SmsService
                         'messageId' => $messageId
                     ];
                 }
-                
+
                 return $responseData;
             }
 
@@ -558,7 +557,7 @@ class SmsService
                 'status' => $response->status(),
                 'response' => $response->body()
             ]);
-            
+
             return null;
         } catch (\Exception $e) {
             Log::error('Failed to check SMS status - Exception', [

@@ -146,13 +146,13 @@ class SendCustomerMessage extends Page
         $data = $this->form->getState();
 
         $message = $data['message'];
-        
+
         // Get the active provider from database configuration
-        $config = SmsConfiguration::first();
-        $provider = $config?->active_provider ?? 'smsq';
-        
+        $smsConfig = SmsConfiguration::first();
+        $provider = $smsConfig?->active_provider ?? 'smsq';
+
         $selectAll = $data['select_all'] ?? false;
-        
+
         // Handle customer selection based on select_all toggle
         if ($selectAll) {
             // Get all customers with phone numbers when select_all is true

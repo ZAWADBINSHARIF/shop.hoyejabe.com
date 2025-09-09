@@ -22,15 +22,15 @@ class SmsSettings extends Page
 
     public function mount(): void
     {
-        $config = SmsConfiguration::first();
-        
+        $smsConfig = SmsConfiguration::first();
+
         $this->form->fill([
-            'active_provider' => $config?->active_provider ?? 'smsq',
-            'smsq_api_key' => $config?->smsq_api_key ?? '',
-            'smsq_client_id' => $config?->smsq_client_id ?? '',
-            'smsq_sender_id' => $config?->smsq_sender_id ?? '',
-            'bulksmsbd_api_key' => $config?->bulksmsbd_api_key ?? '',
-            'bulksmsbd_sender_id' => $config?->bulksmsbd_sender_id ?? '',
+            'active_provider' => $smsConfig?->active_provider ?? 'smsq',
+            'smsq_api_key' => $smsConfig?->smsq_api_key ?? '',
+            'smsq_client_id' => $smsConfig?->smsq_client_id ?? '',
+            'smsq_sender_id' => $smsConfig?->smsq_sender_id ?? '',
+            'bulksmsbd_api_key' => $smsConfig?->bulksmsbd_api_key ?? '',
+            'bulksmsbd_sender_id' => $smsConfig?->bulksmsbd_sender_id ?? '',
         ]);
     }
 
@@ -90,9 +90,9 @@ class SmsSettings extends Page
     {
         $data = $this->form->getState();
 
-        $config = SmsConfiguration::firstOrNew();
-        $config->fill($data);
-        $config->save();
+        $smsConfig = SmsConfiguration::firstOrNew();
+        $smsConfig->fill($data);
+        $smsConfig->save();
 
         Notification::make()
             ->title('SMS Settings Updated')

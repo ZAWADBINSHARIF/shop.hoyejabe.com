@@ -14,12 +14,12 @@ class BulkSMSBDService
     public function __construct()
     {
         // Get SMS configuration from database
-        $config = SmsConfiguration::first();
-        
+        $smsConfig = SmsConfiguration::first();
+
         // Use database config if available, otherwise fallback to env config
         $this->apiUrl = config('services.bulksmsbd.endpoint', 'http://bulksmsbd.net/api/smsapi');
-        $this->apiKey = $config?->bulksmsbd_api_key ?? config('services.bulksmsbd.api_key');
-        $this->senderId = $config?->bulksmsbd_sender_id ?? config('services.bulksmsbd.sender_id');
+        $this->apiKey = $smsConfig?->bulksmsbd_api_key ?? config('services.bulksmsbd.api_key');
+        $this->senderId = $smsConfig?->bulksmsbd_sender_id ?? config('services.bulksmsbd.sender_id');
     }
 
     /**
@@ -56,7 +56,7 @@ class BulkSMSBDService
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            
+
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $error = curl_error($ch);
@@ -67,7 +67,7 @@ class BulkSMSBDService
                     'error' => $error,
                     'numbers' => $numberString
                 ]);
-                
+
                 return [
                     'success' => false,
                     'error' => 'cURL error: ' . $error,
@@ -77,7 +77,7 @@ class BulkSMSBDService
 
             // Parse response
             $responseData = json_decode($response, true);
-            
+
             if ($httpCode === 200 && isset($responseData['response_code']) && $responseData['response_code'] == 202) {
                 Log::info('BulkSMSBD SMS sent successfully', [
                     'numbers' => $numberString,
@@ -105,7 +105,6 @@ class BulkSMSBDService
                 'response' => $responseData,
                 'http_code' => $httpCode
             ];
-
         } catch (\Exception $e) {
             Log::error('BulkSMSBD exception', [
                 'error' => $e->getMessage(),
@@ -150,7 +149,7 @@ class BulkSMSBDService
             }
 
             $response = $this->sendSMS($phone, $message);
-            
+
             if ($response['success']) {
                 $results['success']++;
             } else {
@@ -213,7 +212,7 @@ class BulkSMSBDService
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            
+
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
@@ -226,7 +225,6 @@ class BulkSMSBDService
                 'currency' => $responseData['currency'] ?? 'BDT',
                 'response' => $responseData
             ];
-
         } catch (\Exception $e) {
             Log::error('BulkSMSBD balance check failed', [
                 'error' => $e->getMessage()
@@ -272,11 +270,11 @@ class BulkSMSBDService
     public function validatePhoneNumber(string $phoneNumber): bool
     {
         $formatted = $this->formatPhoneNumber($phoneNumber);
-        
+
         // Bangladesh phone numbers should be 13 digits (880 + 10 digits)
         // and start with valid operator codes
         $pattern = '/^880(1[3-9])\d{8}$/';
-        
+
         return preg_match($pattern, $formatted) === 1;
     }
 
@@ -292,7 +290,7 @@ class BulkSMSBDService
     {
         $appName = $appName ?? config('app.name');
         $message = "Your OTP for {$appName} is: {$otp}. Valid for 5 minutes. Do not share with anyone.";
-        
+
         return $this->sendTransactionalSMS($phoneNumber, $message);
     }
 
@@ -308,7 +306,7 @@ class BulkSMSBDService
     {
         $appName = config('app.name');
         $message = "Order #{$orderId} confirmed! Total: {$amount} BDT. Track your order at " . url('/track-order') . ". Thank you for shopping with {$appName}.";
-        
+
         return $this->sendTransactionalSMS($phoneNumber, $message);
     }
 
@@ -323,7 +321,7 @@ class BulkSMSBDService
     {
         $appName = config('app.name');
         $message = "Good news! Your order #{$orderId} has been delivered. Thank you for shopping with {$appName}. We hope you enjoy your purchase!";
-        
+
         return $this->sendTransactionalSMS($phoneNumber, $message);
     }
 }
