@@ -3,7 +3,7 @@
 namespace App\Livewire\Modals;
 
 use App\Models\Customer;
-use App\Services\SmsService;
+use App\Services\SmsManager;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
@@ -50,11 +50,10 @@ class ForgotPassword extends Component
         
         // Send OTP via SMS
         try {
-            $smsService = new SmsService();
+            $smsManager = new SmsManager();
             $fullPhoneNumber = '88' . $this->phone_number;
-            $message = "Your password reset OTP is: {$otp}. Valid for 5 minutes. - " . config('app.name');
             
-            $smsService->sendSms($fullPhoneNumber, $message);
+            $smsManager->sendOTP($fullPhoneNumber, $otp, config('app.name'));
             
             $this->otpSent = true;
             $this->countdown = 120; // 2 minutes countdown for resend

@@ -4,8 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Customer;
 use App\Models\SmsConfiguration;
-use App\Services\SmsService;
-use App\Services\BulkSMSBDService;
+use App\Services\SmsManager;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Notifications\Notification;
@@ -146,17 +145,12 @@ class SendCustomerMessage extends Page
         $data = $this->form->getState();
 
         $message = $data['message'];
-
-        // Get the active provider from database configuration
-        $smsConfig = SmsConfiguration::first();
-        $provider = $smsConfig?->active_provider ?? 'smsq';
-
         $selectAll = $data['select_all'] ?? false;
 
         // Handle customer selection based on select_all toggle
         if ($selectAll) {
             // Get all customers with phone numbers when select_all is true
-            $customers = Customer::whereNotNull('phone_number')->get();
+            $customerIds = [];
         } else {
             // Get selected customers
             $customerIds = $data['customers'] ?? [];
@@ -168,164 +162,46 @@ class SendCustomerMessage extends Page
                     ->send();
                 return;
             }
-            $customers = Customer::whereIn('id', $customerIds)
-                ->whereNotNull('phone_number')
-                ->get();
-        }
-
-        if ($customers->isEmpty()) {
-            Notification::make()
-                ->title('No Valid Recipients')
-                ->body('Selected customers do not have phone numbers.')
-                ->danger()
-                ->send();
-            return;
         }
 
         try {
-            $result = [];
+            // Use the unified SmsManager
+            $smsManager = new SmsManager();
+            
+            // Send bulk promotional messages (handles both providers internally)
+            $result = $smsManager->sendBulkPromotional($message, $customerIds);
 
-            if ($provider === 'bulksmsbd') {
-                // Use BulkSMSBD service
-                $smsService = new BulkSMSBDService();
-
-                // Prepare recipients array for BulkSMSBD
-                $recipients = $customers->map(function ($customer) use ($message) {
-                    return [
-                        'phone' => $customer->phone_number,
-                        'message' => str_replace(
-                            ['{name}', '{first_name}'],
-                            [$customer->full_name, explode(' ', $customer->full_name)[0]],
-                            $message
-                        )
-                    ];
-                })->toArray();
-
-                $result = $smsService->sendBulkSMS($recipients);
-
-                if ($result['success'] > 0) {
-                    Notification::make()
-                        ->title('Messages Sent Successfully')
-                        ->body("Successfully sent {$result['success']} message(s). Failed: {$result['failed']}")
-                        ->success()
-                        ->send();
-
-                    Log::info('BulkSMSBD SMS sent', [
-                        'provider' => 'bulksmsbd',
-                        'success' => $result['success'],
-                        'failed' => $result['failed'],
-                        'message' => $message,
-                        'sent_by' => auth()->user()->id ?? null,
-                    ]);
-                } else {
-                    Notification::make()
-                        ->title('Failed to Send Messages')
-                        ->body("All messages failed to send. Please check your BulkSMSBD credentials and balance.")
-                        ->danger()
-                        ->send();
+            if ($result['success']) {
+                $successMessage = "Successfully sent messages to {$result['sent_count']} customer(s).";
+                if (isset($result['failed_count']) && $result['failed_count'] > 0) {
+                    $successMessage .= " Failed: {$result['failed_count']}";
                 }
+                if (isset($result['total_groups']) && $result['total_groups'] > 1) {
+                    $successMessage .= " (Sent in {$result['total_groups']} batch(es))";
+                }
+
+                Notification::make()
+                    ->title('Messages Sent Successfully')
+                    ->body($successMessage)
+                    ->success()
+                    ->send();
+
+                Log::info('Bulk SMS sent via SmsManager', [
+                    'provider' => $smsManager->getActiveProvider(),
+                    'recipients_count' => $result['sent_count'],
+                    'failed_count' => $result['failed_count'] ?? 0,
+                    'message' => $message,
+                    'sent_by' => auth()->user()->id ?? null,
+                ]);
             } else {
-                // Use SMSQ service with direct bulk sending method
-                $smsService = new SmsService();
-
-                // Check if message contains placeholders for personalization
-                $hasPlaceholders = strpos($message, '{name}') !== false || strpos($message, '{first_name}') !== false;
-
-                if ($hasPlaceholders) {
-                    // Message has placeholders - personalize for each customer and group by unique messages
-                    $messageGroups = [];
-
-                    foreach ($customers as $customer) {
-                        $personalizedMessage = str_replace(
-                            ['{name}', '{first_name}'],
-                            [$customer->full_name, explode(' ', $customer->full_name)[0]],
-                            $message
-                        );
-
-                        // Group customers by identical messages
-                        $messageHash = md5($personalizedMessage);
-                        if (!isset($messageGroups[$messageHash])) {
-                            $messageGroups[$messageHash] = [
-                                'message' => $personalizedMessage,
-                                'phones' => []
-                            ];
-                        }
-                        $messageGroups[$messageHash]['phones'][] = $smsService->formatPhoneNumber($customer->phone_number ?? $customer->customer_mobile);
-                    }
-
-                    // Send each message group using sendBulkSameMessage
-                    $totalSuccess = 0;
-                    $totalFailed = 0;
-                    $errors = [];
-
-                    foreach ($messageGroups as $group) {
-                        // Call sendBulkSameMessage directly (now public)
-                        $groupResult = $smsService->sendBulkSameMessage($group['phones'], $group['message']);
-
-                        if ($groupResult['success']) {
-                            $totalSuccess += $groupResult['sent_count'];
-                        } else {
-                            $totalFailed += count($group['phones']);
-                            $errors[] = $groupResult['error'] ?? 'Unknown error';
-                        }
-
-                        // Small delay between API calls
-                        usleep(100000); // 100ms
-                    }
-
-                    $result = [
-                        'success' => $totalSuccess > 0,
-                        'sent_count' => $totalSuccess,
-                        'failed_count' => $totalFailed,
-                        'total_groups' => count($messageGroups),
-                        'error' => !empty($errors) ? implode('; ', array_unique($errors)) : null
-                    ];
-                } else {
-                    // No placeholders - collect all phone numbers and send in one API call
-                    $phoneNumbers = [];
-                    foreach ($customers as $customer) {
-                        $phoneNumbers[] = $smsService->formatPhoneNumber($customer->phone_number ?? $customer->customer_mobile);
-                    }
-
-                    // Call sendBulkSameMessage directly (now public)
-                    $result = $smsService->sendBulkSameMessage($phoneNumbers, $message);
-                }
-
-                if ($result['success']) {
-                    $successMessage = "Successfully sent messages to {$result['sent_count']} customer(s).";
-                    if (isset($result['failed_count']) && $result['failed_count'] > 0) {
-                        $successMessage .= " Failed: {$result['failed_count']}";
-                    }
-                    if (isset($result['total_groups']) && $result['total_groups'] > 1) {
-                        $successMessage .= " (Sent in {$result['total_groups']} batch(es))";
-                    }
-
-                    Notification::make()
-                        ->title('Messages Sent Successfully')
-                        ->body($successMessage)
-                        ->success()
-                        ->send();
-
-                    Log::info('SMSQ SMS sent', [
-                        'provider' => 'smsq',
-                        'recipients_count' => $result['sent_count'],
-                        'failed_count' => $result['failed_count'] ?? 0,
-                        'message' => $message,
-                        'has_placeholders' => $hasPlaceholders,
-                        'total_groups' => $result['total_groups'] ?? 1,
-                        'sent_by' => auth()->user()->id ?? null,
-                    ]);
-                } else {
-                    Notification::make()
-                        ->title('Failed to Send Messages')
-                        ->body($result['error'] ?? 'Could not send messages to customers.')
-                        ->danger()
-                        ->send();
-                }
+                Notification::make()
+                    ->title('Failed to Send Messages')
+                    ->body($result['error'] ?? 'Could not send messages to customers.')
+                    ->danger()
+                    ->send();
             }
         } catch (\Exception $e) {
             Log::error('Failed to send bulk SMS', [
-                'provider' => $provider,
                 'error' => $e->getMessage()
             ]);
 

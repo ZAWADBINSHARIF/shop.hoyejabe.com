@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Models\ProductComment;
 use App\Models\CustomerFavorite;
 use App\Models\ShippingCost;
-use App\Services\SmsService;
+use App\Services\SmsManager;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -147,8 +147,8 @@ class SingleProduct extends Component
 
         // Send SMS notification to customer
         try {
-            $smsService = new SmsService();
-            $smsService->sendOrderConfirmation($newOrder);
+            $smsManager = new SmsManager();
+            $smsManager->sendOrderConfirmation($newOrder);
             
             Log::info('Order confirmation SMS sent', [
                 'order_id' => $newOrder->id,

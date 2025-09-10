@@ -3,7 +3,7 @@
 namespace App\Livewire\Modals;
 
 use App\Models\Customer;
-use App\Services\SmsService;
+use App\Services\SmsManager;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Validate;
@@ -72,12 +72,10 @@ class SignUp extends Component
             ], now()->addMinutes(5));
 
             // Send OTP via SMS
-            $smsService = new SmsService();
+            $smsManager = new SmsManager();
             $formattedPhone = $this->formatPhoneNumber($this->phone_number);
             
-            $message = "Welcome to " . config('app.name') . "! Your signup OTP is: {$otp}. Valid for 5 minutes. Do not share with anyone.";
-            
-            $sent = $smsService->sendSms($formattedPhone, $message);
+            $sent = $smsManager->sendOTP($formattedPhone, $otp, config('app.name'));
             
             if ($sent) {
                 $this->otpSent = true;
@@ -176,9 +174,9 @@ class SignUp extends Component
             
             // Send welcome SMS
             try {
-                $smsService = new SmsService();
+                $smsManager = new SmsManager();
                 $welcomeMessage = "Welcome to " . config('app.name') . ", {$this->full_name}! Your account has been created successfully. Happy shopping!";
-                $smsService->sendSms($this->formatPhoneNumber($this->phone_number), $welcomeMessage);
+                $smsManager->sendSms($this->formatPhoneNumber($this->phone_number), $welcomeMessage);
             } catch (\Exception $e) {
                 Log::error('Failed to send welcome SMS', ['error' => $e->getMessage()]);
             }
