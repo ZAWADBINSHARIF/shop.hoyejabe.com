@@ -30,9 +30,9 @@ class SendCustomerMessage extends Page
 
     protected static ?int $navigationSort = 10;
 
-    protected final float $perMessageCost = 0.35003;
+    protected float $perMessageCost = 0.35003;
 
-    protected final int $perMessageCharacters = 160;
+    protected int $perMessageCharacters = 160;
 
     public ?array $data = [];
 
