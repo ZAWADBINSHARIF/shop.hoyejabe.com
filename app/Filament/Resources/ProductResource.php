@@ -132,9 +132,10 @@ class ProductResource extends Resource
                             ->afterStateUpdated(function (?string $state, ?string $old, Get $get, Set $set) {
 
                                 if ($get('discount_percentage')) {
-                                    $set('without_discount_price', $state + $state * ($set('discount_percentage') / 100));
+                                    $set('without_discount_price', $state + $state * ($get('discount_percentage') / 100));
                                 }
                             })
+                            ->live(true)
                             ->prefix('৳'),
 
 
@@ -143,7 +144,7 @@ class ProductResource extends Resource
                             ->afterStateUpdated(function (?string $state, ?string $old, Get $get, Set $set) {
                                 $set('without_discount_price', $get('base_price') + $get('base_price') * ($state / 100));
                             })
-                            ->live()
+                            ->live(true)
                             ->suffix('%'),
 
                         TextInput::make('without_discount_price')
