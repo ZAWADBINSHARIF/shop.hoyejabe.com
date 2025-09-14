@@ -35,11 +35,6 @@ class OrderResource extends Resource
         return Order::count();
     }
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
     public static function form(Form $form): Form
     {
         return $form
@@ -149,6 +144,7 @@ class OrderResource extends Resource
                     TextInput::make('total_price')
                         ->numeric()
                         ->required()
+                        ->default(0)
                         ->readOnly()
                         ->prefix('৳')
                         ->helperText('Automatically calculated from ordered products and shipping costs'),
@@ -156,6 +152,7 @@ class OrderResource extends Resource
                     Select::make('order_status')
                         ->required()
                         ->options(OrderStatus::class)
+                        ->default(OrderStatus::Pending->value)
                         ->native(false),
                 ])->columns(2)
             ]);

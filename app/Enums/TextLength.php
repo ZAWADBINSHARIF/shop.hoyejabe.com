@@ -6,7 +6,7 @@ enum TextLength: int
 {
     case TINY         = 3;
     case PASSWORD     = 6;
-    case PHONE        = 11;
+    case PHONE        = 14;
     case SHORT        = 32;
     case MEDIUM       = 80;
     case LONG         = 255;
