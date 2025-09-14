@@ -25,7 +25,7 @@ class EditOrder extends EditRecord
                     \Filament\Forms\Components\Textarea::make('message')
                         ->label('Order Message')
                         ->rows(20)
-                        ->default(fn () => $this->generateOrderMessage($this->record))
+                        ->default(fn() => $this->generateOrderMessage($this->record))
                         ->extraAttributes([
                             'style' => 'font-family: monospace; font-size: 14px;',
                             'onclick' => 'this.select();',
@@ -33,10 +33,29 @@ class EditOrder extends EditRecord
                         ->helperText('Click on the text area to select all text, then copy (Ctrl+C or Cmd+C). You can also edit the message before sending.')
                 ])
                 ->modalHeading('Order Message for ' . ($this->record?->order_tracking_id ?? 'Order'))
-                ->modalDescription('The order message has been generated. You can edit, copy it or send it via SMS.')
+                ->modalDescription('The order message has been generated. You can edit and send it via SMS.')
                 ->modalSubmitActionLabel('Done')
                 ->modalCancelAction(false)
-                ->extraModalFooterActions(fn (Actions\Action $action): array => [
+                ->extraModalFooterActions(fn(Actions\Action $action): array => [
+                    Actions\Action::make('copyMessage')
+                        ->label('Copy Message')
+                        ->icon('heroicon-o-clipboard-document')
+                        ->color('gray')
+                        ->action(function () use ($action) {
+                            // Get the current form data from the parent action
+                            $data = $action->getLivewire()->mountedActionsData[0] ?? [];
+                            $message = $data['message'] ?? $this->generateOrderMessage($this->record);
+                            
+                            // Use Alpine.js to copy to clipboard
+                            $this->dispatch('copy-to-clipboard', text: $message);
+                            
+                            Notification::make()
+                                ->title('Message Copied')
+                                ->body('Order message has been copied to clipboard')
+                                ->success()
+                                ->duration(2000)
+                                ->send();
+                        }),
                     Actions\Action::make('sendSms')
                         ->label('Send SMS to Customer')
                         ->icon('heroicon-o-device-phone-mobile')
@@ -49,13 +68,13 @@ class EditOrder extends EditRecord
                             // Get the current form data from the parent action
                             $data = $action->getLivewire()->mountedActionsData[0] ?? [];
                             $message = $data['message'] ?? $this->generateOrderMessage($this->record);
-                            
+
                             $smsManager = new SmsManager();
                             $success = $smsManager->sendSms(
                                 $this->record->customer_mobile,
                                 $message
                             );
-                            
+
                             if ($success) {
                                 Notification::make()
                                     ->title('SMS Sent Successfully')
@@ -71,7 +90,7 @@ class EditOrder extends EditRecord
                             }
                         }),
                 ]),
-            
+
             Actions\DeleteAction::make(),
         ];
     }
@@ -84,7 +103,7 @@ class EditOrder extends EditRecord
         $message .= "Customer: {$order->customer_name}\n";
         $message .= "Phone: {$order->customer_mobile}\n";
         $message .= "Address: {$order->address}, {$order->city}";
-        
+
         if ($order->upazila) {
             $message .= ", {$order->upazila}";
         }
@@ -94,35 +113,35 @@ class EditOrder extends EditRecord
         if ($order->post_code) {
             $message .= " - {$order->post_code}";
         }
-        
+
         $message .= "\n\nProducts:\n";
         $message .= "----------\n";
-        
+
         $totalQuantity = 0;
         foreach ($order->orderedProducts as $index => $orderedProduct) {
             $itemNo = $index + 1;
             $message .= "{$itemNo}. {$orderedProduct->product_name}\n";
             $message .= "   Quantity: {$orderedProduct->quantity}\n";
-            
+
             if ($orderedProduct->selected_size) {
                 $message .= "   Size: {$orderedProduct->selected_size}\n";
             }
-            
+
             if ($orderedProduct->selected_color_code) {
                 $message .= "   Color: {$orderedProduct->selected_color_code}\n";
             }
-            
-            $message .= "   Price: ৳{$orderedProduct->product_total_price}\n\n";
+
+            $message .= "   Price: BDT {$orderedProduct->product_total_price}\n\n";
             $totalQuantity += $orderedProduct->quantity;
         }
-        
+
         $message .= "Summary:\n";
         $message .= "----------\n";
         $message .= "Total Items: {$totalQuantity}\n";
-        $message .= "Shipping: ৳" . ($order->shipping_cost + $order->extra_shipping_cost) . "\n";
-        $message .= "Total Amount: ৳{$order->total_price}\n";
+        $message .= "Shipping: BDT " . ($order->shipping_cost + $order->extra_shipping_cost) . "\n";
+        $message .= "Total Amount: BDT {$order->total_price}\n";
         $message .= "Status: {$order->order_status->getLabel()}\n";
-        
+
         return $message;
     }
 
@@ -132,5 +151,33 @@ class EditOrder extends EditRecord
         $this->refreshFormData([
             'total_price',
         ]);
+    }
+    
+    protected function getListeners(): array
+    {
+        return array_merge(parent::getListeners(), [
+            'copy-to-clipboard' => 'handleCopyToClipboard',
+        ]);
+    }
+    
+    public function handleCopyToClipboard($text): void
+    {
+        $escapedText = json_encode($text);
+        $this->dispatch('execute-js', js: "
+            navigator.clipboard.writeText({$escapedText}).then(function() {
+                console.log('Text copied to clipboard');
+            }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = {$escapedText};
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            });
+        ");
     }
 }

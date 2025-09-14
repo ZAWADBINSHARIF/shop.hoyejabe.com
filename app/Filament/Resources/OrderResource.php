@@ -166,7 +166,7 @@ class OrderResource extends Resource
                     ->copyable(),
 
                 TextColumn::make('customer.full_name')
-                    ->label('Customer')
+                    ->label('Account Name')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
