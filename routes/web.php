@@ -20,5 +20,5 @@ Route::get('/track-order', TrackOrder::class)->name("track-order");
 Route::get('/my-order', MyOrder::class)->name("my-order");
 
 // Invoice routes
-Route::get('/invoice/{order}/download', [InvoiceController::class, 'download'])->name('invoice.download');
-Route::get('/invoice/{order}/view', [InvoiceController::class, 'view'])->name('invoice.view');
+Route::get('/invoice/{order_tracking_id}/download', [InvoiceController::class, 'download'])->name('invoice.download');
+Route::get('/invoice/{order_tracking_id}/view', [InvoiceController::class, 'view'])->name('invoice.view');

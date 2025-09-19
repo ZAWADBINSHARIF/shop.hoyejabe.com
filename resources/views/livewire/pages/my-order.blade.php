@@ -17,15 +17,27 @@
 
                         <div class="flex flex-col items-end gap-3">
 
-                            {{-- Download Invoice --}}
-                            <a href="{{ route('invoice.download', $order->id) }}" target="_blank">
-                                <flux:button class="hover:cursor-pointer">
-                                    <span>
-                                        Download invoice
-                                    </span>
-                                    <flux:icon icon="arrow-down" class="size-5" />
-                                </flux:button>
-                            </a>
+                            <div class="flex gap-2">
+                                {{-- View Invoice --}}
+                                <a href="{{ route('invoice.view', $order->order_tracking_id) }}" target="_blank">
+                                    <flux:button variant="ghost" class="hover:cursor-pointer">
+                                        <span>
+                                            View invoice
+                                        </span>
+                                        <flux:icon icon="eye" class="size-5" />
+                                    </flux:button>
+                                </a>
+
+                                {{-- Download Invoice --}}
+                                <a href="{{ route('invoice.download', $order->order_tracking_id) }}" target="_blank">
+                                    <flux:button class="hover:cursor-pointer">
+                                        <span>
+                                            Download invoice
+                                        </span>
+                                        <flux:icon icon="arrow-down" class="size-5" />
+                                    </flux:button>
+                                </a>
+                            </div>
 
                             <flux:badge variant="solid" color="indigo" class="block">
                                 {{ ucwords((string) $order->order_status->value) ?? 'Processing' }}
@@ -42,7 +54,8 @@
                             <p><strong>Address:</strong> {{ $order->address }}, {{ $order->city }}</p>
                         </div>
                         <div>
-                            <p><strong>Shipping Area:</strong> {{ $order->shipping ? $order->shipping->title : 'N/A' }}</p>
+                            <p><strong>Shipping Area:</strong> {{ $order->shipping ? $order->shipping->title : 'N/A' }}
+                            </p>
                             <p><strong>Shipping Cost:</strong> ৳{{ number_format($order->shipping_cost, 2) }}</p>
                             <p><strong>Total:</strong> <span
                                     class="font-bold text-indigo-600">৳{{ number_format($order->total_price, 2) }}</span>
@@ -59,7 +72,7 @@
                     </div>
                 </div>
             @endforeach
-            
+
             {{-- Pagination --}}
             <div class="mt-8">
                 {{ $orders->links() }}

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
-    public function download($orderId)
+    public function download($order_tracking_id)
     {
         // Check if customer is logged in
         if (!Auth::guard('customer')->check()) {
@@ -18,7 +18,8 @@ class InvoiceController extends Controller
 
         // Find the order and check if it belongs to the logged-in customer
         $order = Order::with(['orderedProducts.product', 'shipping', 'customer'])
-            ->findOrFail($orderId);
+            ->where('order_tracking_id', $order_tracking_id)
+            ->firstOrFail();
 
         // Verify the order belongs to the logged-in customer
         $customerId = Auth::guard('customer')->id();
@@ -28,12 +29,12 @@ class InvoiceController extends Controller
 
         // Generate PDF
         $pdf = Pdf::loadView('invoices.order-invoice', compact('order'));
-        
+
         // Download the PDF
         return $pdf->download('invoice-' . $order->order_tracking_id . '.pdf');
     }
 
-    public function view($orderId)
+    public function view($order_tracking_id)
     {
         // Check if customer is logged in
         if (!Auth::guard('customer')->check()) {
@@ -42,7 +43,8 @@ class InvoiceController extends Controller
 
         // Find the order and check if it belongs to the logged-in customer
         $order = Order::with(['orderedProducts.product', 'shipping', 'customer'])
-            ->findOrFail($orderId);
+            ->where('order_tracking_id', $order_tracking_id)
+            ->firstOrFail();
 
         // Verify the order belongs to the logged-in customer
         $customerId = Auth::guard('customer')->id();
@@ -52,7 +54,7 @@ class InvoiceController extends Controller
 
         // Generate PDF and stream it to browser
         $pdf = Pdf::loadView('invoices.order-invoice', compact('order'));
-        
+
         return $pdf->stream('invoice-' . $order->order_tracking_id . '.pdf');
     }
 }

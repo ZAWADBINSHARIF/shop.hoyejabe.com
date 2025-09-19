@@ -175,7 +175,6 @@
         }
 
         .badge {
-            display: inline-block;
             padding: 5px 12px;
             border-radius: 15px;
             font-size: 11px;
@@ -235,8 +234,8 @@
                         <p>Phone: {{ $order->customer_mobile }}</p>
                         <p>{{ $order->address }}</p>
                         <p>{{ $order->city }}{{ $order->upazila ? ', ' . $order->upazila : '' }}</p>
-                        {{ $order->thana ? '<p>Thana: ' . $order->thana . '</p>' : '' }}
-                        {{ $order->post_code ? '<p>Post Code: ' . $order->post_code . '</p>' : '' }}
+                        <p>{{ $order->thana ? 'Thana: ' . $order->thana : '' }}</p>
+                        <p>{{ $order->post_code ? 'Post Code: ' . $order->post_code : '' }}</p>
                     </div>
                 </div>
                 <div class="col">
@@ -244,13 +243,13 @@
                         <p class="section-title">Invoice Details</p>
                         <p><strong>Invoice Date:</strong> {{ $order->created_at->format('F d, Y') }}</p>
                         <p><strong>Order Date:</strong> {{ $order->created_at->format('F d, Y') }}</p>
-                        <p><strong>Order Status:</strong>
+                        <div class=""><strong>Order Status:</strong>
                             @php
                                 $status = strtolower($order->order_status->value);
                                 $badgeClass = 'badge-' . $status;
                             @endphp
                             <span class="badge {{ $badgeClass }}">{{ ucfirst($order->order_status->value) }}</span>
-                        </p>
+                        </div>
                         @if ($order->shipping)
                             <p><strong>Shipping Area:</strong> {{ $order->shipping->title }}</p>
                         @endif

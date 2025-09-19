@@ -46,8 +46,35 @@ class EditOrder extends EditRecord
                             $data = $action->getLivewire()->mountedActionsData[0] ?? [];
                             $message = $data['message'] ?? $this->generateOrderMessage($this->record);
                             
-                            // Use Alpine.js to copy to clipboard
-                            $this->dispatch('copy-to-clipboard', text: $message);
+                            // Store message in session for JS to access
+                            session()->flash('clipboard_text', $message);
+                            
+                            // Dispatch browser event with the text to copy
+                            $this->js("
+                                const text = " . json_encode($message) . ";
+                                navigator.clipboard.writeText(text).then(() => {
+                                    window.\$wireui.notify({
+                                        title: 'Success!',
+                                        description: 'Message copied to clipboard',
+                                        icon: 'success'
+                                    });
+                                }).catch((err) => {
+                                    // Fallback for older browsers
+                                    const textarea = document.createElement('textarea');
+                                    textarea.value = text;
+                                    textarea.style.position = 'fixed';
+                                    textarea.style.opacity = '0';
+                                    document.body.appendChild(textarea);
+                                    textarea.select();
+                                    document.execCommand('copy');
+                                    document.body.removeChild(textarea);
+                                    window.\$wireui.notify({
+                                        title: 'Success!',
+                                        description: 'Message copied to clipboard',
+                                        icon: 'success'
+                                    });
+                                });
+                            ");
                             
                             Notification::make()
                                 ->title('Message Copied')
@@ -151,33 +178,5 @@ class EditOrder extends EditRecord
         $this->refreshFormData([
             'total_price',
         ]);
-    }
-    
-    protected function getListeners(): array
-    {
-        return array_merge(parent::getListeners(), [
-            'copy-to-clipboard' => 'handleCopyToClipboard',
-        ]);
-    }
-    
-    public function handleCopyToClipboard($text): void
-    {
-        $escapedText = json_encode($text);
-        $this->dispatch('execute-js', js: "
-            navigator.clipboard.writeText({$escapedText}).then(function() {
-                console.log('Text copied to clipboard');
-            }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
-                // Fallback for older browsers
-                const textarea = document.createElement('textarea');
-                textarea.value = {$escapedText};
-                textarea.style.position = 'fixed';
-                textarea.style.opacity = '0';
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-            });
-        ");
     }
 }

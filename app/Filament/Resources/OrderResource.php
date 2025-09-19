@@ -12,6 +12,7 @@ use App\Models\ShippingCost;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -110,6 +111,13 @@ class OrderResource extends Resource
                         ->maxLength(TextLength::LONG->value)
                         ->maxLength(10),
                 ])->columns(2),
+
+                // Section::make()->schema([
+                //     Textarea::make('customer_note')
+                //         ->nullable()
+                //         ->maxLength(TextLength::LARGE->value)
+                //         ->rows(4)
+                // ]),
 
                 Section::make('Shipping')->schema([
                     Select::make('selected_shipping_area')
